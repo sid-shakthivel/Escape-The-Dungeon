@@ -8,6 +8,10 @@ public class Player : MonoBehaviour
     public float Speed;
     public float BulletSpeed;
 
+    private float BulletCount;
+    private float Health = 100;
+    private float BulletPower = 10;
+
     private void FixedUpdate()
     {
         transform.Translate(Input.GetAxis("Horizontal") * Speed * Time.deltaTime, 0, 0);
@@ -25,5 +29,4 @@ public class Player : MonoBehaviour
             BulletInstance.velocity = ShootDirection * BulletSpeed;
         }
     }
-
 }

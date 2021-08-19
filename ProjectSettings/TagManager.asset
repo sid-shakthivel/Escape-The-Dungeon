@@ -47,3 +47,6 @@ TagManager:
   - name: Player
     uniqueID: 27424673
     locked: 0
+  - name: Other
+    uniqueID: 3187772401
+    locked: 0

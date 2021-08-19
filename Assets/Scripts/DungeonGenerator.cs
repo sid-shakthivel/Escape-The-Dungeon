@@ -12,8 +12,8 @@ public class DungeonGenerator : MonoBehaviour
 
     private void Start()
     {
-        CreateDungeons();
-        //PrintGrid();
+        CreateDungeon(GetNewCell(2, 2, 2, 2));
+        //CreateDungeons();
         CreatePaths();
     }
 
@@ -44,7 +44,8 @@ public class DungeonGenerator : MonoBehaviour
 
     private void CreateDungeon(Vector2 DungeonVector)
     {
-        Instantiate(Dungeon, GetDungeonPosition(DungeonVector), Quaternion.identity);
+        GameObject NewDungeon = Instantiate(Dungeon, GetDungeonPosition(DungeonVector), Quaternion.identity);
+        NewDungeon.transform.SetParent(transform);
         OldDungeon = DungeonVector;
     }
 
@@ -90,7 +91,8 @@ public class DungeonGenerator : MonoBehaviour
 
                     Path.transform.localScale = new Vector3(5f, Size, 0);
 
-                    Instantiate(Path, Position, IsVertical ? Quaternion.identity : Quaternion.Euler(0, 0, 90));
+                    GameObject NewPath = Instantiate(Path, Position, IsVertical ? Quaternion.identity : Quaternion.Euler(0, 0, 90));
+                    NewPath.transform.SetParent(transform);
                 }
             }
         }
