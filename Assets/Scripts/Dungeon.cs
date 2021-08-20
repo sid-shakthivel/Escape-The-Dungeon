@@ -23,7 +23,8 @@ public class Dungeon : MonoBehaviour
         Vector3 DungeonBounds = DungeonSpriteRenderer.bounds.extents;
         Vector2 DungeonPosition = transform.position;
         Vector2 PositionOfChest = GetRandomPosition(DungeonPosition.x - DungeonBounds.x + 1, DungeonPosition.x + DungeonBounds.x - 1, DungeonPosition.y - DungeonBounds.y + 1, DungeonPosition.y + DungeonBounds.y - 1);
-        Instantiate(Chest, PositionOfChest, Quaternion.identity);
+        GameObject NewChest = Instantiate(Chest, PositionOfChest, Quaternion.identity);
+        NewChest.transform.SetParent(transform);
     }
 
     private Vector2 GetRandomPosition(float MinX, float MaxX, float MinY, float MaxY)

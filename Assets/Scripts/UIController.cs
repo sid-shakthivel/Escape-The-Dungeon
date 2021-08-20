@@ -5,15 +5,20 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Text HeartText;
+    public Text BulletCountText;
+
+    private Player PlayerScript;
+
+    private void Awake()
     {
-        
+        GameObject PlayerObject = GameObject.FindGameObjectWithTag("Player");
+        PlayerScript = PlayerObject.GetComponent<Player>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        HeartText.text = "Hearts: " + PlayerScript.GetHearts();
+        BulletCountText.text = "Bullets: " + PlayerScript.GetBulletCount();
     }
 }

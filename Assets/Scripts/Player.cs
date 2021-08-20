@@ -10,34 +10,9 @@ public class Player : MonoBehaviour
     public float BulletSpeed;
 
     private Rigidbody2D PlayerRigidbody;
-    private float BulletCount;
-    private float Hearts = 100;
+    private float BulletCount = 10;
+    private float Hearts = 10;
     private float BulletPower = 10;
-
-    public float GetBulletCount()
-    {
-        return BulletCount;
-    }
-
-    public float GetHearts()
-    {
-        return Hearts;
-    }
-
-    public void SetBulletCount(float NewBulletCount)
-    {
-        BulletCount = NewBulletCount;
-    }
-
-    public void SetHearts(float NewHealth)
-    {
-        Hearts = NewHealth;
-    }
-
-    public void SetBulletPower(float NewBulletPower)
-    {
-        BulletPower = NewBulletPower;
-    }
 
     private void Start()
     {
@@ -65,8 +40,54 @@ public class Player : MonoBehaviour
             }
             else if (Hit.collider.CompareTag("Chest"))
             {
-                // Call Chest Function Thingy
+                Chest ChestScript = GetClosestChest().GetComponent<Chest>();
+                ChestScript.LootChest();
             }
         }
+    }
+
+    private GameObject GetClosestChest()
+    {
+        GameObject ClosestChest = null;
+        float Distance = 1000;
+        foreach (GameObject Chest in GameObject.FindGameObjectsWithTag("Chest"))
+        {
+            if (Vector2.Distance(Chest.transform.position, transform.position) < Distance)
+            {
+                Distance = Vector2.Distance(Chest.transform.position, transform.position);
+                ClosestChest = Chest;
+            }
+        }
+        return ClosestChest;
+    }
+
+    public float GetBulletCount()
+    {
+        return BulletCount;
+    }
+
+    public float GetHearts()
+    {
+        return Hearts;
+    }
+
+    public float GetBulletPower()
+    {
+        return BulletPower;
+    }
+
+    public void SetBulletCount(float NewBulletCount)
+    {
+        BulletCount = NewBulletCount;
+    }
+
+    public void SetHearts(float NewHealth)
+    {
+        Hearts = NewHealth;
+    }
+
+    public void SetBulletPower(float NewBulletPower)
+    {
+        BulletPower = NewBulletPower;
     }
 }

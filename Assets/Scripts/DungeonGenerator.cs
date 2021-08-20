@@ -12,8 +12,7 @@ public class DungeonGenerator : MonoBehaviour
 
     private void Start()
     {
-        CreateDungeon(GetNewCell(2, 2, 2, 2));
-        //CreateDungeons();
+        CreateDungeons();
         CreatePaths();
     }
 
