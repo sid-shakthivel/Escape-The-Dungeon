@@ -5,14 +5,15 @@ using UnityEngine;
 public class Chest : MonoBehaviour
 {
     private bool IsUsed;
-
-
-    void Start()
+    private Player PlayerScript;
+    
+    private void Awake()
     {
-        
+        //GameObject PlayerObject = GameObject.FindGameObjectWithTag("Player");
+        //Player PlayerScript = PlayerObject.GetComponent<Player>();
     }
 
-    void Update()
+    private void Update()
     {
         if (!IsUsed)
         {

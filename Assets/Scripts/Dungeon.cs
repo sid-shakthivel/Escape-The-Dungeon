@@ -22,7 +22,7 @@ public class Dungeon : MonoBehaviour
     {
         Vector3 DungeonBounds = DungeonSpriteRenderer.bounds.extents;
         Vector2 DungeonPosition = transform.position;
-        Vector2 PositionOfChest = GetRandomPosition(DungeonPosition.x - DungeonBounds.x, DungeonPosition.x + DungeonBounds.x - 1, DungeonPosition.y - DungeonBounds.y, DungeonPosition.y + DungeonBounds.y - 1);
+        Vector2 PositionOfChest = GetRandomPosition(DungeonPosition.x - DungeonBounds.x + 1, DungeonPosition.x + DungeonBounds.x - 1, DungeonPosition.y - DungeonBounds.y + 1, DungeonPosition.y + DungeonBounds.y - 1);
         Instantiate(Chest, PositionOfChest, Quaternion.identity);
     }
 

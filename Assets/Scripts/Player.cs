@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour
 {
@@ -8,25 +9,64 @@ public class Player : MonoBehaviour
     public float Speed;
     public float BulletSpeed;
 
+    private Rigidbody2D PlayerRigidbody;
     private float BulletCount;
-    private float Health = 100;
+    private float Hearts = 100;
     private float BulletPower = 10;
+
+    public float GetBulletCount()
+    {
+        return BulletCount;
+    }
+
+    public float GetHearts()
+    {
+        return Hearts;
+    }
+
+    public void SetBulletCount(float NewBulletCount)
+    {
+        BulletCount = NewBulletCount;
+    }
+
+    public void SetHearts(float NewHealth)
+    {
+        Hearts = NewHealth;
+    }
+
+    public void SetBulletPower(float NewBulletPower)
+    {
+        BulletPower = NewBulletPower;
+    }
+
+    private void Start()
+    {
+        PlayerRigidbody = GetComponent<Rigidbody2D>();
+    }
 
     private void FixedUpdate()
     {
-        transform.Translate(Input.GetAxis("Horizontal") * Speed * Time.deltaTime, 0, 0);
-        transform.Translate(0, Input.GetAxis("Vertical") * Speed * Time.deltaTime, 0);
+        Vector3 MovementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+        PlayerRigidbody.MovePosition(transform.position + MovementInput * Time.deltaTime * Speed);
 
         if (Input.GetMouseButtonUp(0))
         {
-            Transform Gun = this.gameObject.transform.GetChild(0);
+            RaycastHit2D Hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
 
-            Vector3 ShootDirection = Input.mousePosition;
-            ShootDirection = Camera.main.ScreenToWorldPoint(ShootDirection);
-            ShootDirection = ShootDirection - transform.position;
+            if (Hit == false)
+            {
+                Transform Gun = this.gameObject.transform.GetChild(0);
 
-            Rigidbody2D BulletInstance = Instantiate(Bullet, Gun.position, Quaternion.identity);
-            BulletInstance.velocity = ShootDirection * BulletSpeed;
+                Vector3 ShootDirection = Input.mousePosition;
+                ShootDirection = Camera.main.ScreenToWorldPoint(ShootDirection);
+                ShootDirection = ShootDirection - transform.position;
+                Rigidbody2D BulletInstance = Instantiate(Bullet, Gun.position, Quaternion.identity);
+                BulletInstance.velocity = ShootDirection * BulletSpeed;
+            }
+            else if (Hit.collider.CompareTag("Chest"))
+            {
+                // Call Chest Function Thingy
+            }
         }
     }
 }
