@@ -13,6 +13,11 @@ public class Chest : MonoBehaviour
         PlayerScript = PlayerObject.GetComponent<Player>();
     }
 
+    private void Start()
+    {
+        InvokeRepeating("ReplenishSupplies", 0, 30);
+    }
+
     public void LootChest()
     {
         if (!IsUsed)
@@ -37,8 +42,12 @@ public class Chest : MonoBehaviour
         }
         else
         {
-            // Wait Some Time Before Replenishing Supplies
             // If During That Time Flash Message
         }
+    }
+
+    private void ReplenishSupplies()
+    {
+        IsUsed = false;
     }
 }
