@@ -2,6 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+class DungeonNode {
+    public float Distance;
+    public Vector2 Position;
+
+    public DungeonNode(float NewDistance, Vector2 NewPosition)
+    {
+        Distance = NewDistance;
+        Position = NewPosition;
+    }
+}
+
 public class DungeonGenerator : MonoBehaviour
 {
     public GameObject Dungeon;
@@ -9,11 +20,13 @@ public class DungeonGenerator : MonoBehaviour
 
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
+    private IDictionary<Vector2, List<DungeonNode>> DungeonHashMap = new Dictionary<Vector2, List<DungeonNode>>();
 
     private void Start()
     {
         CreateDungeons();
         CreatePaths();
+        PrintGrid();
     }
 
     private void CreateDungeons()
@@ -35,6 +48,7 @@ public class DungeonGenerator : MonoBehaviour
             if (Grid[(int)NewDungeon.x, (int)NewDungeon.y] != 1)
             {
                 Grid[(int)NewDungeon.x, (int)NewDungeon.y] = 1;
+                DungeonHashMap[NewDungeon] = new List<DungeonNode>();
                 CreateDungeon(NewDungeon);
                 DungeonCount += 1;
             } 
@@ -92,6 +106,9 @@ public class DungeonGenerator : MonoBehaviour
 
                     GameObject NewPath = Instantiate(Path, Position, IsVertical ? Quaternion.identity : Quaternion.Euler(0, 0, 90));
                     NewPath.transform.SetParent(transform);
+
+                    DungeonHashMap[LastIndexPostion].Add(new DungeonNode(Size, IndexPosition));
+                    DungeonHashMap[IndexPosition].Add(new DungeonNode(Size, LastIndexPostion));
                 }
             }
         }
