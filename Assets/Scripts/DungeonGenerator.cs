@@ -22,7 +22,7 @@ public class DungeonGenerator : MonoBehaviour
         Grid[2, 2] = 1;
 
         int DungeonCount = 0;
-        while (DungeonCount < 7)
+        while (DungeonCount < 5)
         {
             int Option = Random.Range(0, 2);
 
