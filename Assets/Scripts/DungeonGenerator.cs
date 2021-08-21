@@ -51,7 +51,7 @@ public class DungeonGenerator : MonoBehaviour
         if (Position1.y == Position2.y)
             Path.transform.localScale = new Vector3(5f, ((Position1 - Position2).x + 10), 0);
 
-        Instantiate(Path, Position, Position1.y == Position2.y ? Quaternion.identity : Quaternion.Euler(0, 0, 90));
+        Instantiate(Path, Position, Position1.y == Position2.y ? Quaternion.Euler(0, 0, 90) : Quaternion.identity);
     }
 
     private void CreateDungeon(Vector2 DungeonVector)
