@@ -16,8 +16,8 @@ public class Dungeon : MonoBehaviour
 
     void Start()
     {
-        Invoke("CreateChest", 0.5f);
-        InvokeRepeating("CreateEnemy", 0.5f, 120f);
+        //Invoke("CreateChest", 0.5f);
+        //InvokeRepeating("CreateEnemy", 0.5f, 120f);
     }
 
     private void CreateChest()

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-class DungeonNode {
+public class DungeonNode {
     public float Distance;
     public Vector2 Position;
 
@@ -15,24 +15,52 @@ class DungeonNode {
 
 public class DungeonGenerator : MonoBehaviour
 {
+    // Rewrite All This...
     public GameObject Dungeon;
     public GameObject Path;
+    public IDictionary<Vector2, List<DungeonNode>> DungeonHashMap = new Dictionary<Vector2, List<DungeonNode>>();
 
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
-    private IDictionary<Vector2, List<DungeonNode>> DungeonHashMap = new Dictionary<Vector2, List<DungeonNode>>();
+    private Vector2 Target;
+    private Vector2 OldItem;
 
     private void Start()
-    {
+    {            
         CreateDungeons();
         CreatePaths();
-        PrintGrid();
+        DoThing();
+        //PrintGrid();
+    }
+
+    private void DoThing()
+    {
+        foreach (var Item in DungeonHashMap)
+            Target = Item.Key;
+        float Distance = GetShortestPath(DungeonHashMap[new Vector2(0, 0)]);
+        Debug.Log("Distance To " + Target + "Is " + Distance);
+    }
+
+    private float GetShortestPath(List<DungeonNode> Dungeons)
+    {
+        foreach (var Item in Dungeons)
+        {
+            if (Item.Position == OldItem)
+                continue;
+            else if (Item.Position == Target)
+                return Item.Distance;
+            else
+            {
+                OldItem = Item.Position;
+                return Item.Distance + GetShortestPath(DungeonHashMap[Item.Position]);
+            }
+        }
+        return 0;
     }
 
     private void CreateDungeons()
     {
         CreateDungeon(GetNewCell(2, 2, 2, 2));
-        Grid[2, 2] = 1;
 
         int DungeonCount = 0;
         while (DungeonCount < 5)
@@ -47,10 +75,8 @@ public class DungeonGenerator : MonoBehaviour
 
             if (Grid[(int)NewDungeon.x, (int)NewDungeon.y] != 1)
             {
-                Grid[(int)NewDungeon.x, (int)NewDungeon.y] = 1;
-                DungeonHashMap[NewDungeon] = new List<DungeonNode>();
-                CreateDungeon(NewDungeon);
                 DungeonCount += 1;
+                CreateDungeon(NewDungeon);
             } 
         }
     }
@@ -59,6 +85,8 @@ public class DungeonGenerator : MonoBehaviour
     {
         GameObject NewDungeon = Instantiate(Dungeon, GetDungeonPosition(DungeonVector), Quaternion.identity);
         NewDungeon.transform.SetParent(transform);
+        Grid[(int)DungeonVector.x, (int)DungeonVector.y] = 1;
+        DungeonHashMap[GetDungeonPosition(DungeonVector)] = new List<DungeonNode>();
         OldDungeon = DungeonVector;
     }
 
@@ -95,20 +123,27 @@ public class DungeonGenerator : MonoBehaviour
                     break;
                 else
                 {
-                    Vector2 LastIndexPostion = GetDungeonPosition(new Vector2(GridIndex, LastDungeonIndex));
-                    Vector2 IndexPosition = GetDungeonPosition(new Vector2(GridIndex, CurrentDungeonIndex));
+                    Vector2 LastIndexPostion = IsVertical == true ? GetDungeonPosition(new Vector2(GridIndex, LastDungeonIndex)) : InverseVector(GetDungeonPosition(new Vector2(GridIndex, LastDungeonIndex)));
+                    Vector2 IndexPosition = IsVertical == true ? GetDungeonPosition(new Vector2(GridIndex, CurrentDungeonIndex)) : InverseVector(GetDungeonPosition(new Vector2(GridIndex, CurrentDungeonIndex)));
 
-                    Vector2 Position = IsVertical == true ? (IndexPosition + LastIndexPostion) / 2 : InverseVector((IndexPosition + LastIndexPostion) / 2);
+                    Vector2 Position = (IndexPosition + LastIndexPostion) / 2;
 
-                    float Size = IsVertical == true ? ((IndexPosition - LastIndexPostion).y - 10) : ((InverseVector(IndexPosition) - InverseVector(LastIndexPostion)).x - 10);
+                    float Size = IsVertical == true ? ((IndexPosition - LastIndexPostion).y - 10) : (IndexPosition - LastIndexPostion).x - 10;
 
                     Path.transform.localScale = new Vector3(5f, Size, 0);
 
                     GameObject NewPath = Instantiate(Path, Position, IsVertical ? Quaternion.identity : Quaternion.Euler(0, 0, 90));
                     NewPath.transform.SetParent(transform);
 
-                    DungeonHashMap[LastIndexPostion].Add(new DungeonNode(Size, IndexPosition));
-                    DungeonHashMap[IndexPosition].Add(new DungeonNode(Size, LastIndexPostion));
+                    if (DungeonHashMap.ContainsKey(LastIndexPostion))
+                    {
+                        DungeonHashMap[LastIndexPostion].Add(new DungeonNode(Size, IndexPosition));
+                    }
+
+                    if (DungeonHashMap.ContainsKey(IndexPosition))
+                    {
+                        DungeonHashMap[IndexPosition].Add(new DungeonNode(Size, LastIndexPostion));
+                    }
                 }
             }
         }
