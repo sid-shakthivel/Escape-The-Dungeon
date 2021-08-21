@@ -2,18 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class DungeonNode
+{
+    public Vector2 Position;
+    public float Distance;
+
+    public DungeonNode(Vector2 DungeonNodePosition, float DungeonNodeDistance)
+    {
+        Position = DungeonNodePosition;
+        Distance -= DungeonNodeDistance;
+    }
+}
+
 public class DungeonGenerator : MonoBehaviour
 {
     public GameObject Dungeon;
     public GameObject Path;
+    public Dictionary<Vector2, List<DungeonNode>> DungeonHashMap = new Dictionary<Vector2, List<DungeonNode>>();
 
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
+    private Vector2 Target;
 
     private void Start()
     {            
         CreateDungeons();
         CreatePaths();
+        
+        GetShortestPath(DungeonHashMap[new Vector2(0, 0)]);
     }
 
     private void CreateDungeons()
@@ -39,40 +55,13 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    private void CreatePath(Vector2 Position1, Vector2 Position2)
-    {
-        Position1 = GetDungeonPosition(Position1);
-        Position2 = GetDungeonPosition(Position2);
-        Vector2 Position = (Position1 + Position2) / 2;
-
-        if (Position1.x == Position2.x)
-            Path.transform.localScale = new Vector3(5f, ((Position1 - Position2).y + 10), 0);
-
-        if (Position1.y == Position2.y)
-            Path.transform.localScale = new Vector3(5f, ((Position1 - Position2).x + 10), 0);
-
-        Instantiate(Path, Position, Position1.y == Position2.y ? Quaternion.Euler(0, 0, 90) : Quaternion.identity);
-    }
-
     private void CreateDungeon(Vector2 DungeonVector)
     {
         GameObject NewDungeon = Instantiate(Dungeon, GetDungeonPosition(DungeonVector), Quaternion.identity);
         NewDungeon.transform.SetParent(transform);
         Grid[(int)DungeonVector.x, (int)DungeonVector.y] = 1;
+        DungeonHashMap.Add(DungeonVector, new List<DungeonNode>());
         OldDungeon = DungeonVector;
-    }
-
-    private Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
-    {
-        Vector2 GridCentreVector = new Vector2(2, 2);
-        Vector2 CentreVector = new Vector2(0, 0);
-        return ((GridDungeonVector - GridCentreVector) * 20) + CentreVector;
-    }
-
-
-    private Vector2 GetNewCell(int MinX, int MaxX, int MinY, int MaxY)
-    {
-        return new Vector2(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
     }
 
     private void CreatePaths()
@@ -89,6 +78,47 @@ public class DungeonGenerator : MonoBehaviour
                 k++;
             }
         }
+    }
+
+    private void CreatePath(Vector2 Position1, Vector2 Position2)
+    {
+        Vector2 ScaledPosition1 = GetDungeonPosition(Position1);
+        Vector2 ScaledPosition2 = GetDungeonPosition(Position2);
+        Vector2 ScaledPosition = (ScaledPosition1 + ScaledPosition2) / 2;
+
+        float Size = Position1.x == Position2.x ? ((ScaledPosition1 - ScaledPosition2).y + 10) : ((ScaledPosition1 - ScaledPosition2).x + 10);
+
+        Path.transform.localScale = new Vector3(5f, Size, 0);
+        Instantiate(Path, ScaledPosition, ScaledPosition1.y == ScaledPosition2.y ? Quaternion.Euler(0, 0, 90) : Quaternion.identity);
+
+        DungeonHashMap[Position1].Add(new DungeonNode(Position2, Size));
+        DungeonHashMap[Position2].Add(new DungeonNode(Position1, Size));
+    }
+
+    private float GetShortestPath(List<DungeonNode> Dungeons)
+    {
+        foreach (var Dungeon in Dungeons)
+        {
+            if (Dungeon.Position == Target)
+                return Dungeon.Distance;
+            else
+                return Dungeon.Distance + GetShortestPath(DungeonHashMap[Dungeon.Position]);
+        }
+        return 0;
+    }
+
+
+    private Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
+    {
+        Vector2 GridCentreVector = new Vector2(2, 2);
+        Vector2 CentreVector = new Vector2(0, 0);
+        return ((GridDungeonVector - GridCentreVector) * 20) + CentreVector;
+    }
+
+
+    private Vector2 GetNewCell(int MinX, int MaxX, int MinY, int MaxY)
+    {
+        return new Vector2(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
     }
 
     private bool CheckForHorizontalSpaceInGrid(int j)
