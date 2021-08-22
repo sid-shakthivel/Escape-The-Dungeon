@@ -25,52 +25,47 @@ public class Boss : MonoBehaviour
     { 
         transform.position = Dungeon.GetRandomDungeon();
         Dictionary<DungeonNode, DungeonNode> DungeonHashMap = Dijkstra(Graph.First(), Graph.Last());
-        foreach (KeyValuePair<DungeonNode, DungeonNode> Node in DungeonHashMap)
-        {
-            Debug.Log(Node.Value);
-        }
+        Debug.Log(DungeonHashMap.First().Value.Position);
     }
 
     private Dictionary<DungeonNode, DungeonNode> Dijkstra(DungeonNode Start, DungeonNode End)
     {
         Dictionary<DungeonNode, DungeonNode> Result = new Dictionary<DungeonNode, DungeonNode>();
-        List<DungeonNode> PriorityQueue = new List<DungeonNode>();
+        List<DungeonNode> UnvisitedNodes = new List<DungeonNode>();
 
         foreach (DungeonNode Node in Graph)
         {
             if (Node != Start)
                 Result.Add(Node, null);
-            PriorityQueue.Add(Node);
+            UnvisitedNodes.Add(Node);
         }
 
         Start.DjkstraDistance = 0;
 
-        while (PriorityQueue.Count != 0)
+        while (UnvisitedNodes.Count != 0)
         {
-            PriorityQueue.Sort(new DungeonNodeComparer());
-
-            DungeonNode CurrentNode = PriorityQueue.First();
+            UnvisitedNodes.Sort(new DungeonNodeComparer());
+            DungeonNode CurrentNode = UnvisitedNodes.First();
 
             if (CurrentNode == End)
-            {
-                Debug.Log("OH DEAR");
                 return Result;
-            }
 
             foreach (DungeonNode NeighbourNode in CurrentNode.Neighbours)
             {
-                int Distance = CurrentNode.DjkstraDistance + NeighbourNode.Cost;
-                Debug.Log(CurrentNode.DjkstraDistance);
-                Debug.Log(NeighbourNode.Cost);
-                if (Distance < NeighbourNode.DjkstraDistance)
+                if (UnvisitedNodes.Contains(NeighbourNode))
                 {
-                    NeighbourNode.DjkstraDistance = Distance;
-                    Result[NeighbourNode] = CurrentNode;
-                    PriorityQueue.Remove(NeighbourNode);
-                    PriorityQueue.Add(NeighbourNode);
+                    int Distance = CurrentNode.DjkstraDistance + NeighbourNode.Cost;
+                    if (Distance < NeighbourNode.DjkstraDistance)
+                    {
+                        NeighbourNode.DjkstraDistance = Distance;
+                        Result[NeighbourNode] = CurrentNode;
+                    }
                 }
             }
+
+            UnvisitedNodes.Remove(CurrentNode);
         }
+
         return null;
     }
 }

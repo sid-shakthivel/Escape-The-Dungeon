@@ -90,6 +90,9 @@ public class DungeonGenerator : MonoBehaviour
                             CreatePath(new Vector2(i, j), new Vector2(i, k));
                             j = k;
                         }
+            }
+            for (int j = 0; j < 5; j++)
+            {
                 if (Grid[j, i] == 1)
                     for (int k = j + 1; k < 5; k++)
                         if (Grid[k, i] == 1)
