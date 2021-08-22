@@ -6,53 +6,68 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
-    private Dictionary<DungeonNode, List<DungeonNode>> DungeonHashMap;
+    private List<DungeonNode> Graph = new List<DungeonNode>();
     private GameObject Player;
     private Vector2 Target;
 
     private void Awake()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
-        DungeonHashMap = GameObject.FindGameObjectWithTag("DungeonGenerator").GetComponent<DungeonGenerator>().DungeonHashMap;
+        Graph = GameObject.FindGameObjectWithTag("DungeonGenerator").GetComponent<DungeonGenerator>().Graph;
     }
 
     private void Start()
     {
-        Invoke("ChangePosition", 0.5f);
+        Invoke("Initialisation", 0.5f);
     }
 
-    private void ChangePosition()
+    private void Initialisation()
     { 
         transform.position = Dungeon.GetRandomDungeon();
-        Dijksta(DungeonHashMap.First().Key, DungeonHashMap.First(Node => Node.Key.Position == (Vector2)Player.transform.position).Key);
+        Dictionary<DungeonNode, DungeonNode> DungeonHashMap = Dijkstra(Graph.First(), Graph.Last());
+        foreach (KeyValuePair<DungeonNode, DungeonNode> Node in DungeonHashMap)
+        {
+            Debug.Log(Node.Value);
+        }
     }
 
-    private Dictionary<DungeonNode, DungeonNode> Dijksta(DungeonNode Start, DungeonNode End)
+    private Dictionary<DungeonNode, DungeonNode> Dijkstra(DungeonNode Start, DungeonNode End)
     {
         Dictionary<DungeonNode, DungeonNode> Result = new Dictionary<DungeonNode, DungeonNode>();
-        SortedDictionary<DungeonNode, float> PriorityQueue = new SortedDictionary<DungeonNode, float>();
+        List<DungeonNode> PriorityQueue = new List<DungeonNode>();
 
-        foreach (var Node in DungeonHashMap)
+        foreach (DungeonNode Node in Graph)
         {
-            Node.Key.DjkstraDistance = Int32.MaxValue;
-            Result.Add(Node.Key, null);
-            PriorityQueue.Add(Node.Key, Int32.MaxValue);
+            if (Node != Start)
+                Result.Add(Node, null);
+            PriorityQueue.Add(Node);
         }
+
         Start.DjkstraDistance = 0;
 
         while (PriorityQueue.Count != 0)
         {
-            var CurrentNode = PriorityQueue.First();
-            if (CurrentNode.Key == End) return Result;
+            PriorityQueue.Sort(new DungeonNodeComparer());
 
-            foreach (var NeighbourNode in DungeonHashMap[CurrentNode.Key])
+            DungeonNode CurrentNode = PriorityQueue.First();
+
+            if (CurrentNode == End)
             {
-                float Distance = CurrentNode.Key.DjkstraDistance + NeighbourNode.Cost;
+                Debug.Log("OH DEAR");
+                return Result;
+            }
+
+            foreach (DungeonNode NeighbourNode in CurrentNode.Neighbours)
+            {
+                int Distance = CurrentNode.DjkstraDistance + NeighbourNode.Cost;
+                Debug.Log(CurrentNode.DjkstraDistance);
+                Debug.Log(NeighbourNode.Cost);
                 if (Distance < NeighbourNode.DjkstraDistance)
                 {
-                    Result[NeighbourNode] = CurrentNode.Key;
+                    NeighbourNode.DjkstraDistance = Distance;
+                    Result[NeighbourNode] = CurrentNode;
                     PriorityQueue.Remove(NeighbourNode);
-                    PriorityQueue.Add(NeighbourNode, Distance);
+                    PriorityQueue.Add(NeighbourNode);
                 }
             }
         }

@@ -3,16 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class DungeonNode
+public class DungeonNode 
 {
     public Vector2 Position;
-    public float Cost;
-    public float DjkstraDistance;
+    public int Cost;
+    public int DjkstraDistance = int.MaxValue;
+    public List<DungeonNode> Neighbours = new List<DungeonNode>();
 
-    public DungeonNode(Vector2 DungeonNodePosition, float Distance)
+    public DungeonNode(Vector2 DungeonNodePosition)
     {
         Position = DungeonNodePosition;
+    }
+
+    public void Set(int Distance, DungeonNode NeighbourNode)
+    {
         Cost = Distance;
+        Neighbours.Add(NeighbourNode);
+    }
+}
+
+public class DungeonNodeComparer: IComparer<DungeonNode>
+{
+    public int Compare(DungeonNode Node1, DungeonNode Node2)
+    {
+        return Node1.DjkstraDistance - Node2.DjkstraDistance;
     }
 }
 
@@ -20,7 +34,7 @@ public class DungeonGenerator : MonoBehaviour
 {
     public GameObject Dungeon;
     public GameObject Path;
-    public Dictionary<DungeonNode, List<DungeonNode>> DungeonHashMap = new Dictionary<DungeonNode, List<DungeonNode>>();
+    public List<DungeonNode> Graph = new List<DungeonNode>();
 
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
@@ -59,7 +73,7 @@ public class DungeonGenerator : MonoBehaviour
         GameObject NewDungeon = Instantiate(Dungeon, GetDungeonPosition(DungeonVector), Quaternion.identity);
         NewDungeon.transform.SetParent(transform);
         Grid[(int)DungeonVector.x, (int)DungeonVector.y] = 1;
-        DungeonHashMap.Add(new DungeonNode(DungeonVector, 0), new List<DungeonNode>());
+        Graph.Add(new DungeonNode(DungeonVector));
         OldDungeon = DungeonVector;
     }
 
@@ -93,14 +107,17 @@ public class DungeonGenerator : MonoBehaviour
         Vector2 ScaledPosition2 = GetDungeonPosition(Position2);
         Vector2 ScaledPosition = (ScaledPosition1 + ScaledPosition2) / 2;
 
-        float Size = Position1.x == Position2.x ? ((ScaledPosition1 - ScaledPosition2).y + 10) : ((ScaledPosition1 - ScaledPosition2).x + 10);
+        float Size = Position1.x == Position2.x ? Mathf.Abs(((ScaledPosition1 - ScaledPosition2).y + 10)) : Mathf.Abs(((ScaledPosition1 - ScaledPosition2).x + 10));
 
         Path.transform.localScale = new Vector3(5f, Size, 0);
         GameObject NewPath = Instantiate(Path, ScaledPosition, ScaledPosition1.y == ScaledPosition2.y ? Quaternion.Euler(0, 0, 90) : Quaternion.identity);
         NewPath.transform.SetParent(gameObject.transform);
 
-        DungeonHashMap[new DungeonNode(Position1, 0)].Add(new DungeonNode(Position2, Size));
-        DungeonHashMap[new DungeonNode(Position2, 0)].Add(new DungeonNode(Position1, Size));
+        DungeonNode Node1 = Graph.Find(Node => Node.Position == Position1);
+        DungeonNode Node2 = Graph.Find(Node => Node.Position == Position2);
+
+        Node2.Set((int)Size, Node1);
+        Node1.Set((int)Size, Node2);
     }
 
     private Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
