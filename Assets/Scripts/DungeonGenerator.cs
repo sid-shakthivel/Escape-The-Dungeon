@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class DungeonNode
@@ -28,8 +29,14 @@ public class DungeonGenerator : MonoBehaviour
     {            
         CreateDungeons();
         CreatePaths();
-        
-        GetShortestPath(DungeonHashMap[new Vector2(0, 0)]);
+
+        foreach (var Item in DungeonHashMap)
+        {
+            Target = Item.Key;
+        }
+    
+        float Distance = GetShortestPath(DungeonHashMap.First());
+        Debug.Log(Distance);
     }
 
     private void CreateDungeons()
@@ -95,18 +102,20 @@ public class DungeonGenerator : MonoBehaviour
         DungeonHashMap[Position2].Add(new DungeonNode(Position1, Size));
     }
 
-    private float GetShortestPath(List<DungeonNode> Dungeons)
+    private float GetShortestPath(KeyValuePair<Vector2, List<DungeonNode>> CurrentDungeon)
     {
-        foreach (var Dungeon in Dungeons)
+        foreach (var Dungeon in CurrentDungeon.Value)
         {
             if (Dungeon.Position == Target)
                 return Dungeon.Distance;
             else
-                return Dungeon.Distance + GetShortestPath(DungeonHashMap[Dungeon.Position]);
+            {
+                DungeonHashMap[Dungeon.Position] = DungeonHashMap[Dungeon.Position].Where(Entry => Entry.Position != CurrentDungeon.Key).ToList();
+                return Dungeon.Distance + GetShortestPath(DungeonHashMap.First(Entry => DungeonHashMap.Comparer.Equals(Entry.Key, Dungeon.Position)));
+            }
         }
         return 0;
     }
-
 
     private Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
     {
