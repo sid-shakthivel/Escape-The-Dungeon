@@ -28,15 +28,16 @@ public class DungeonGenerator : MonoBehaviour
     private void Start()
     {            
         CreateDungeons();
+        //PrintGrid();
         CreatePaths();
 
-        foreach (var Item in DungeonHashMap)
-        {
-            Target = Item.Key;
-        }
-    
-        float Distance = GetShortestPath(DungeonHashMap.First());
-        Debug.Log(Distance);
+        //foreach (var Item in DungeonHashMap)
+        //{
+        //    Target = Item.Key;
+        //}
+
+        //float Distance = GetShortestPath(DungeonHashMap.First());
+        //Debug.Log(Distance);
     }
 
     private void CreateDungeons()
@@ -75,15 +76,18 @@ public class DungeonGenerator : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            int k = 1;
-            for (int j = 0; j < 5; j++)
-            {
-                if (Grid[i, j] == 1 && Grid[i, k] == 1)
-                    CreatePath(new Vector2(i, j), new Vector2(i, k));
-                if (Grid[j, i] == 1 && Grid[k, i] == 1)
-                    CreatePath(new Vector2(j, i), new Vector2(k, i));
-                k++;
-            }
+            int j = 0;
+            int k = j + 1;
+
+            if (Grid[i, j] == 1)
+                for (k = j + 1; k < 5; k++)
+                    if (Grid[i, k] == 1)
+                        CreatePath(new Vector2(i, j), new Vector2(i, k));
+
+            if (Grid[j, i] == 1)
+                for (k = j + 1; k < 5; k++)
+                    if (Grid[k, i] == 1)
+                        CreatePath(new Vector2(j, i), new Vector2(k, i));
         }
     }
 
@@ -144,5 +148,18 @@ public class DungeonGenerator : MonoBehaviour
             if (Grid[j, i] != 1)
                 return true;
         return false;
+    }
+
+    private void PrintGrid()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            string str = "";
+            for (int j = 0; j < 5; j++)
+            {
+                str += Grid[i, j];
+            }
+            Debug.Log(str);
+        }
     }
 }
