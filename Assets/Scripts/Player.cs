@@ -40,13 +40,13 @@ public class Player : MonoBehaviour
             }
             else if (Hit.collider.CompareTag("Chest"))
             {
-                Chest ChestScript = GetClosestChest().GetComponent<Chest>();
+                Chest ChestScript = FindClosestChest().GetComponent<Chest>();
                 ChestScript.LootChest();
             }
         }
     }
 
-    private GameObject GetClosestChest()
+    private GameObject FindClosestChest()
     {
         GameObject ClosestChest = null;
         float Distance = 1000;

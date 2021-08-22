@@ -6,6 +6,7 @@ public class Dungeon : MonoBehaviour
 {
     public GameObject Chest;
     public GameObject Enemy;
+    public GameObject Boss;
 
     private SpriteRenderer DungeonSpriteRenderer;
 
@@ -41,5 +42,11 @@ public class Dungeon : MonoBehaviour
     private Vector2 GetRandomPosition(float MinX, float MaxX, float MinY, float MaxY)
     {
         return new Vector2(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
+    }
+
+    public static Vector2 GetRandomDungeon()
+    {
+        GameObject[] DungeonArray = GameObject.FindGameObjectsWithTag("Dungeon");
+        return DungeonArray[Random.Range(0, DungeonArray.Length)].transform.position;
     }
 }

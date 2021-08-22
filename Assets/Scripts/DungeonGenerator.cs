@@ -6,12 +6,13 @@ using UnityEngine;
 public class DungeonNode
 {
     public Vector2 Position;
-    public float Distance;
+    public float Cost;
+    public float DjkstraDistance;
 
-    public DungeonNode(Vector2 DungeonNodePosition, float DungeonNodeDistance)
+    public DungeonNode(Vector2 DungeonNodePosition, float Distance)
     {
         Position = DungeonNodePosition;
-        Distance = DungeonNodeDistance;
+        Cost = Distance;
     }
 }
 
@@ -19,24 +20,15 @@ public class DungeonGenerator : MonoBehaviour
 {
     public GameObject Dungeon;
     public GameObject Path;
-    public Dictionary<Vector2, List<DungeonNode>> DungeonHashMap = new Dictionary<Vector2, List<DungeonNode>>();
+    public Dictionary<DungeonNode, List<DungeonNode>> DungeonHashMap = new Dictionary<DungeonNode, List<DungeonNode>>();
 
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
-    private Vector2 Target;
 
     private void Start()
     {            
         CreateDungeons();
         CreatePaths();
-
-        foreach (var Item in DungeonHashMap)
-        {
-            Target = Item.Key;
-        }
-
-        float Distance = GetShortestPath(DungeonHashMap.First());
-        Debug.Log(Mathf.Abs(Distance));
     }
 
     private void CreateDungeons()
@@ -67,7 +59,7 @@ public class DungeonGenerator : MonoBehaviour
         GameObject NewDungeon = Instantiate(Dungeon, GetDungeonPosition(DungeonVector), Quaternion.identity);
         NewDungeon.transform.SetParent(transform);
         Grid[(int)DungeonVector.x, (int)DungeonVector.y] = 1;
-        DungeonHashMap.Add(DungeonVector, new List<DungeonNode>());
+        DungeonHashMap.Add(new DungeonNode(DungeonVector, 0), new List<DungeonNode>());
         OldDungeon = DungeonVector;
     }
 
@@ -104,25 +96,11 @@ public class DungeonGenerator : MonoBehaviour
         float Size = Position1.x == Position2.x ? ((ScaledPosition1 - ScaledPosition2).y + 10) : ((ScaledPosition1 - ScaledPosition2).x + 10);
 
         Path.transform.localScale = new Vector3(5f, Size, 0);
-        Instantiate(Path, ScaledPosition, ScaledPosition1.y == ScaledPosition2.y ? Quaternion.Euler(0, 0, 90) : Quaternion.identity);
+        GameObject NewPath = Instantiate(Path, ScaledPosition, ScaledPosition1.y == ScaledPosition2.y ? Quaternion.Euler(0, 0, 90) : Quaternion.identity);
+        NewPath.transform.SetParent(gameObject.transform);
 
-        DungeonHashMap[Position1].Add(new DungeonNode(Position2, Size));
-        DungeonHashMap[Position2].Add(new DungeonNode(Position1, Size));
-    }
-
-    private float GetShortestPath(KeyValuePair<Vector2, List<DungeonNode>> CurrentDungeon)
-    {
-        foreach (var Dungeon in CurrentDungeon.Value)
-        {
-            if (Dungeon.Position == Target)
-                return Dungeon.Distance;
-            else
-            {
-                DungeonHashMap[Dungeon.Position] = DungeonHashMap[Dungeon.Position].Where(Entry => Entry.Position != CurrentDungeon.Key).ToList();
-                return Dungeon.Distance + GetShortestPath(DungeonHashMap.First(Entry => DungeonHashMap.Comparer.Equals(Entry.Key, Dungeon.Position)));
-            }
-        }
-        return 0;
+        DungeonHashMap[new DungeonNode(Position1, 0)].Add(new DungeonNode(Position2, Size));
+        DungeonHashMap[new DungeonNode(Position2, 0)].Add(new DungeonNode(Position1, Size));
     }
 
     private Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
@@ -131,7 +109,6 @@ public class DungeonGenerator : MonoBehaviour
         Vector2 CentreVector = new Vector2(0, 0);
         return ((GridDungeonVector - GridCentreVector) * 20) + CentreVector;
     }
-
 
     private Vector2 GetNewCell(int MinX, int MaxX, int MinY, int MaxY)
     {
