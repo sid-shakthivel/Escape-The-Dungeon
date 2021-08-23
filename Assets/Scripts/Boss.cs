@@ -7,6 +7,9 @@ using UnityEngine;
 public class Boss : MonoBehaviour
 {
     private List<DungeonNode> Graph = new List<DungeonNode>();
+    private Dictionary<DungeonNode, DungeonNode> VisitedNodes;
+    private List<DungeonNode> Path = new List<DungeonNode>();
+
     private GameObject Player;
     private Vector2 Target;
 
@@ -24,8 +27,7 @@ public class Boss : MonoBehaviour
     private void Initialisation()
     { 
         transform.position = Dungeon.GetRandomDungeon();
-        Dictionary<DungeonNode, DungeonNode> DungeonHashMap = Dijkstra(Graph.First(), Graph.Last());
-        Debug.Log(DungeonHashMap.First().Value.Position);
+        VisitedNodes = Dijkstra(Graph.First(), Graph.Last());
     }
 
     private Dictionary<DungeonNode, DungeonNode> Dijkstra(DungeonNode Start, DungeonNode End)
@@ -35,8 +37,7 @@ public class Boss : MonoBehaviour
 
         foreach (DungeonNode Node in Graph)
         {
-            if (Node != Start)
-                Result.Add(Node, null);
+            Result.Add(Node, null);
             UnvisitedNodes.Add(Node);
         }
 
@@ -67,5 +68,18 @@ public class Boss : MonoBehaviour
         }
 
         return null;
+    }
+
+    private DungeonNode GetShortestPath(DungeonNode CurrentNode)
+    {
+        if (VisitedNodes[CurrentNode] == null)
+        {
+            Path.Add(CurrentNode);
+            return null;
+        } else
+        {
+            Path.Add(CurrentNode);
+            return GetShortestPath(VisitedNodes[CurrentNode]);
+        }
     }
 }

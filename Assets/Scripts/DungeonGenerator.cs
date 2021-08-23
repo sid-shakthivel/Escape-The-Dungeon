@@ -123,7 +123,7 @@ public class DungeonGenerator : MonoBehaviour
         Node1.Set((int)Size, Node2);
     }
 
-    private Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
+    public static Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
     {
         Vector2 GridCentreVector = new Vector2(2, 2);
         Vector2 CentreVector = new Vector2(0, 0);
