@@ -8,8 +8,6 @@ public class Boss : MonoBehaviour
 {
     private List<DungeonNode> Graph = new List<DungeonNode>();
     private Dictionary<DungeonNode, DungeonNode> VisitedNodes;
-    private List<DungeonNode> Path = new List<DungeonNode>();
-
     private GameObject Player;
     private Vector2 Target;
 
@@ -37,7 +35,8 @@ public class Boss : MonoBehaviour
 
         foreach (DungeonNode Node in Graph)
         {
-            Result.Add(Node, null);
+            if (Node != Start)
+                Result.Add(Node, null);
             UnvisitedNodes.Add(Node);
         }
 
@@ -70,16 +69,16 @@ public class Boss : MonoBehaviour
         return null;
     }
 
-    private DungeonNode GetShortestPath(DungeonNode CurrentNode)
+    private List<DungeonNode> GetShortestPath(DungeonNode CurrentNode)
     {
-        if (VisitedNodes[CurrentNode] == null)
+        List<DungeonNode> Path = new List<DungeonNode>();
+        while (true)
         {
             Path.Add(CurrentNode);
-            return null;
-        } else
-        {
-            Path.Add(CurrentNode);
-            return GetShortestPath(VisitedNodes[CurrentNode]);
+            if (CurrentNode == Graph[0])
+                break;
+            CurrentNode = VisitedNodes[CurrentNode];
         }
+        return Path;
     }
 }
