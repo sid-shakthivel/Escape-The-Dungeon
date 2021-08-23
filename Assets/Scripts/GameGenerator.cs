@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class DungeonNode 
@@ -30,10 +28,12 @@ public class DungeonNodeComparer: IComparer<DungeonNode>
     }
 }
 
-public class DungeonGenerator : MonoBehaviour
+public class GameGenerator : MonoBehaviour
 {
-    public GameObject Dungeon;
-    public GameObject Path;
+    public GameObject DungeonGameObject;
+    public GameObject PathGameObject;
+    public GameObject BossGameObject;
+
     public List<DungeonNode> Graph = new List<DungeonNode>();
 
     private int[,] Grid = new int[5, 5];
@@ -43,6 +43,7 @@ public class DungeonGenerator : MonoBehaviour
     {            
         CreateDungeons();
         CreatePaths();
+        Instantiate(BossGameObject, Dungeon.GetRandomDungeon(), Quaternion.identity);
     }
 
     private void CreateDungeons()
@@ -70,7 +71,7 @@ public class DungeonGenerator : MonoBehaviour
 
     private void CreateDungeon(Vector2 DungeonVector)
     {
-        GameObject NewDungeon = Instantiate(Dungeon, GetDungeonPosition(DungeonVector), Quaternion.identity);
+        GameObject NewDungeon = Instantiate(DungeonGameObject, GetDungeonPosition(DungeonVector), Quaternion.identity);
         NewDungeon.transform.SetParent(transform);
         Grid[(int)DungeonVector.x, (int)DungeonVector.y] = 1;
         Graph.Add(new DungeonNode(DungeonVector));
@@ -82,7 +83,6 @@ public class DungeonGenerator : MonoBehaviour
         for (int i = 0; i < 5; i++)
         {
             for (int j = 0; j < 5; j++)
-            {
                 if (Grid[i, j] == 1)
                     for (int k = j + 1; k < 5; k++)
                         if (Grid[i, k] == 1)
@@ -90,9 +90,7 @@ public class DungeonGenerator : MonoBehaviour
                             CreatePath(new Vector2(i, j), new Vector2(i, k));
                             j = k;
                         }
-            }
             for (int j = 0; j < 5; j++)
-            {
                 if (Grid[j, i] == 1)
                     for (int k = j + 1; k < 5; k++)
                         if (Grid[k, i] == 1)
@@ -100,7 +98,6 @@ public class DungeonGenerator : MonoBehaviour
                             CreatePath(new Vector2(j, i), new Vector2(k, i));
                             j = k;
                         }
-            }
         }
     }
 
@@ -112,8 +109,8 @@ public class DungeonGenerator : MonoBehaviour
 
         float Size = Position1.x == Position2.x ? Mathf.Abs(((ScaledPosition1 - ScaledPosition2).y + 10)) : Mathf.Abs(((ScaledPosition1 - ScaledPosition2).x + 10));
 
-        Path.transform.localScale = new Vector3(5f, Size, 0);
-        GameObject NewPath = Instantiate(Path, ScaledPosition, ScaledPosition1.y == ScaledPosition2.y ? Quaternion.Euler(0, 0, 90) : Quaternion.identity);
+        PathGameObject.transform.localScale = new Vector3(5f, Size, 0);
+        GameObject NewPath = Instantiate(PathGameObject, ScaledPosition, ScaledPosition1.y == ScaledPosition2.y ? Quaternion.Euler(0, 0, 90) : Quaternion.identity);
         NewPath.transform.SetParent(gameObject.transform);
 
         DungeonNode Node1 = Graph.Find(Node => Node.Position == Position1);

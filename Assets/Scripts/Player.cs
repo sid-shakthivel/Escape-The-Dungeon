@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour
 {
@@ -14,7 +11,7 @@ public class Player : MonoBehaviour
     private float Hearts = 10;
     private float BulletPower = 10;
 
-    private void Start()
+    private void Awake()
     {
         PlayerRigidbody = GetComponent<Rigidbody2D>();
     }
@@ -31,34 +28,16 @@ public class Player : MonoBehaviour
             if (Hit == false)
             {
                 Transform Gun = this.gameObject.transform.GetChild(0);
-
-                Vector3 ShootDirection = Input.mousePosition;
-                ShootDirection = Camera.main.ScreenToWorldPoint(ShootDirection);
-                ShootDirection = ShootDirection - transform.position;
+                Vector3 ShootDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
                 Rigidbody2D BulletInstance = Instantiate(Bullet, Gun.position, Quaternion.identity);
                 BulletInstance.velocity = ShootDirection * BulletSpeed;
             }
             else if (Hit.collider.CompareTag("Chest"))
             {
-                Chest ChestScript = FindClosestChest().GetComponent<Chest>();
+                Chest ChestScript = Helper.FindClosestGameObject("Chest", transform.position).GetComponent<Chest>();
                 ChestScript.LootChest();
             }
         }
-    }
-
-    private GameObject FindClosestChest()
-    {
-        GameObject ClosestChest = null;
-        float Distance = 1000;
-        foreach (GameObject Chest in GameObject.FindGameObjectsWithTag("Chest"))
-        {
-            if (Vector2.Distance(Chest.transform.position, transform.position) < Distance)
-            {
-                Distance = Vector2.Distance(Chest.transform.position, transform.position);
-                ClosestChest = Chest;
-            }
-        }
-        return ClosestChest;
     }
 
     public float GetBulletCount()

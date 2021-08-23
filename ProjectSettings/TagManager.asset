@@ -8,7 +8,7 @@ TagManager:
   - Path
   - Dungeon
   - Enemy
-  - DungeonGenerator
+  - GameGenerator
   layers:
   - Default
   - TransparentFX

@@ -1,31 +1,45 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
+    public float Speed;
+
     private List<DungeonNode> Graph = new List<DungeonNode>();
     private Dictionary<DungeonNode, DungeonNode> VisitedNodes;
+    private List<DungeonNode> Path = new List<DungeonNode>();
     private GameObject Player;
-    private Vector2 Target;
+    private DungeonNode BossDungeonNode;
+
+    private int PathIndex = 0;
 
     private void Awake()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
-        Graph = GameObject.FindGameObjectWithTag("DungeonGenerator").GetComponent<DungeonGenerator>().Graph;
+        Graph = GameObject.FindGameObjectWithTag("GameGenerator").GetComponent<GameGenerator>().Graph;
     }
 
     private void Start()
     {
-        Invoke("Initialisation", 0.5f);
+        GameObject BossDungeon =  Helper.FindClosestGameObject("Dungeon", transform.position);
+        GameObject PlayerDungeon = Helper.FindClosestGameObject("Dungeon", Player.transform.position);
+        BossDungeonNode =  Graph.Find(Node => GameGenerator.GetDungeonPosition(Node.Position) == (Vector2)BossDungeon.transform.position);
+        DungeonNode PlayerDungeonNode = Graph.Find(Node => GameGenerator.GetDungeonPosition(Node.Position) == (Vector2)PlayerDungeon.transform.position);
+
+        VisitedNodes = Dijkstra(BossDungeonNode, PlayerDungeonNode);
+        SetShortestPath(PlayerDungeonNode);
     }
 
-    private void Initialisation()
-    { 
-        transform.position = Dungeon.GetRandomDungeon();
-        VisitedNodes = Dijkstra(Graph.First(), Graph.Last());
+    private void Update()
+    {
+        if (PathIndex < Path.Count)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, GameGenerator.GetDungeonPosition(Path[PathIndex].Position), Speed * Time.deltaTime);
+
+            if ((Vector2)transform.position == GameGenerator.GetDungeonPosition(Path[PathIndex].Position))
+                PathIndex++;
+        }
     }
 
     private Dictionary<DungeonNode, DungeonNode> Dijkstra(DungeonNode Start, DungeonNode End)
@@ -47,9 +61,6 @@ public class Boss : MonoBehaviour
             UnvisitedNodes.Sort(new DungeonNodeComparer());
             DungeonNode CurrentNode = UnvisitedNodes.First();
 
-            if (CurrentNode == End)
-                return Result;
-
             foreach (DungeonNode NeighbourNode in CurrentNode.Neighbours)
             {
                 if (UnvisitedNodes.Contains(NeighbourNode))
@@ -66,19 +77,18 @@ public class Boss : MonoBehaviour
             UnvisitedNodes.Remove(CurrentNode);
         }
 
-        return null;
+        return Result;
     }
 
-    private List<DungeonNode> GetShortestPath(DungeonNode CurrentNode)
+    private void SetShortestPath(DungeonNode CurrentNode)
     {
-        List<DungeonNode> Path = new List<DungeonNode>();
         while (true)
         {
             Path.Add(CurrentNode);
-            if (CurrentNode == Graph[0])
+            if (CurrentNode == BossDungeonNode)
                 break;
             CurrentNode = VisitedNodes[CurrentNode];
         }
-        return Path;
+        Path.Reverse();
     }
 }
