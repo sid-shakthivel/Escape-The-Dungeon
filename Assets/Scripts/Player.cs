@@ -21,7 +21,9 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         Vector3 MovementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-        PlayerAnimator.SetFloat("Speed", Input.GetAxis("Horizontal") * Speed);
+
+        PlayerAnimator.SetFloat("HorizontalSpeed", Input.GetAxis("Horizontal") * Speed);
+        PlayerAnimator.SetFloat("VerticalSpeed", Input.GetAxis("Vertical") * Speed);
 
         PlayerRigidbody.MovePosition(transform.position + MovementInput * Time.deltaTime * Speed);
 

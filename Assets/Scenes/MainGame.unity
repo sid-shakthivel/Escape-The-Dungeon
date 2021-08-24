@@ -328,16 +328,24 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1374541901716096105, guid: 22f362554cddd46809e79de16df3432d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1374541902173797360, guid: 22f362554cddd46809e79de16df3432d, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1374541902173797362, guid: 22f362554cddd46809e79de16df3432d, type: 3}
+      propertyPath: m_Size.x
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1374541902173797362, guid: 22f362554cddd46809e79de16df3432d, type: 3}
+      propertyPath: m_Size.y
+      value: 1.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1374541902173797362, guid: 22f362554cddd46809e79de16df3432d, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -7292798746301496257, guid: f52a0a1d4c1bf4d09b99166ebc9c7141, type: 3}
+      objectReference: {fileID: -734083753746549371, guid: cf437bfafb82f41a882456b86529746e, type: 3}
     - target: {fileID: 1374541902173797362, guid: 22f362554cddd46809e79de16df3432d, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -380,11 +388,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1374541902173797365, guid: 22f362554cddd46809e79de16df3432d, type: 3}
       propertyPath: m_LocalScale.x
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1374541902173797365, guid: 22f362554cddd46809e79de16df3432d, type: 3}
       propertyPath: m_LocalScale.y
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1374541902173797365, guid: 22f362554cddd46809e79de16df3432d, type: 3}
       propertyPath: m_LocalPosition.x
