@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public float BulletSpeed;
 
     private Rigidbody2D PlayerRigidbody;
+    private Animator PlayerAnimator;
     private float BulletCount = 10;
     private float Hearts = 10;
     private float BulletPower = 10;
@@ -14,11 +15,14 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         PlayerRigidbody = GetComponent<Rigidbody2D>();
+        PlayerAnimator = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
     {
         Vector3 MovementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+        PlayerAnimator.SetFloat("Speed", Input.GetAxis("Horizontal") * Speed);
+
         PlayerRigidbody.MovePosition(transform.position + MovementInput * Time.deltaTime * Speed);
 
         if (Input.GetMouseButtonUp(0))
