@@ -19,19 +19,10 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
-        Vector2 XDirection = new Vector2((transform.position - Player.transform.position).x, 0);
-        Vector2 YDirection = new Vector2(0, (transform.position - Player.transform.position).y);
-
-        if (Mathf.Abs(XDirection.x) < Mathf.Abs(YDirection.y))
-        {
-            Speed = XDirection.x < 0 ? -Speed : Speed;
-            EnemyRigidbody.MovePosition(new Vector2(Speed * Time.deltaTime, 0));
-            EnemyAnimator.SetFloat("HorizontalSpeed", Speed);
-        } else
-        {
-            Speed = YDirection.x < 0 ? -Speed : Speed;
-            EnemyRigidbody.MovePosition(new Vector2(0, Speed * Time.deltaTime));
-            EnemyAnimator.SetFloat("HorizontalSpeed", Speed);
-        }
+        Vector2 DirectionToPlayer = (Player.transform.position - transform.position).normalized;
+        EnemyAnimator.SetFloat("HorizontalSpeed", Mathf.Round(DirectionToPlayer.x));
+        EnemyAnimator.SetFloat("VerticalSpeed", Mathf.Round(DirectionToPlayer.y));
+        Debug.Log(DirectionToPlayer);
+        EnemyRigidbody.velocity = new Vector2(DirectionToPlayer.x, DirectionToPlayer.y) * Speed;
     }
 }
