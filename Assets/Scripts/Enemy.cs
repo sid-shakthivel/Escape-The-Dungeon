@@ -17,36 +17,21 @@ public class Enemy : MonoBehaviour
         EnemyAnimator = GetComponent<Animator>();
     }
 
-    void Update()
+    private void Update()
     {
-        StartCoroutine(MoveTowardsPlayer());
-        StartCoroutine(CheckIsPlayerNear());
-    }
+        Vector2 XDirection = new Vector2((transform.position - Player.transform.position).x, 0);
+        Vector2 YDirection = new Vector2(0, (transform.position - Player.transform.position).y);
 
-    private IEnumerator MoveTowardsPlayer()
-    {
-        if (IsPlayerNear)
+        if (Mathf.Abs(XDirection.x) < Mathf.Abs(YDirection.y))
         {
-            for (float i = 0; i < 1; i += Time.deltaTime / 10)
-            {
-                EnemyRigidbody.MovePosition(Vector2.MoveTowards(transform.position, Player.transform.position, Speed * Time.deltaTime));
-                EnemyAnimator.SetFloat("HorizontalSpeed", EnemyRigidbody.velocity.x);
-                EnemyAnimator.SetFloat("VerticalSpeed", EnemyRigidbody.velocity.y);
-                yield return new WaitForSeconds(30f);
-            }
+            Speed = XDirection.x < 0 ? -Speed : Speed;
+            EnemyRigidbody.MovePosition(new Vector2(Speed * Time.deltaTime, 0));
+            EnemyAnimator.SetFloat("HorizontalSpeed", Speed);
+        } else
+        {
+            Speed = YDirection.x < 0 ? -Speed : Speed;
+            EnemyRigidbody.MovePosition(new Vector2(0, Speed * Time.deltaTime));
+            EnemyAnimator.SetFloat("HorizontalSpeed", Speed);
         }
-    }
-
-    private IEnumerator CheckIsPlayerNear()
-    {
-        IsPlayerNear = IsPlayerPositionNear();
-        yield return new WaitForSeconds(1f);
-    }
-
-    private bool IsPlayerPositionNear()
-    {
-        if (Vector2.Distance(transform.position, Player.transform.position) <= 5)
-            return true;
-        return false;
     }
 }
