@@ -25,6 +25,8 @@ public class Player : MonoBehaviour
         PlayerAnimator.SetFloat("HorizontalSpeed", Input.GetAxis("Horizontal") * Speed);
         PlayerAnimator.SetFloat("VerticalSpeed", Input.GetAxis("Vertical") * Speed);
 
+        //Debug.Log(Input.GetAxis("Horizontal") * Speed);
+
         PlayerRigidbody.MovePosition(transform.position + MovementInput * Time.deltaTime * Speed);
 
         if (Input.GetMouseButtonUp(0))
