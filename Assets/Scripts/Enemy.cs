@@ -7,12 +7,14 @@ public class Enemy : MonoBehaviour
 
     private GameObject Player;
     private Rigidbody2D EnemyRigidbody;
+    private Animator EnemyAnimator;
     private bool IsPlayerNear;
 
     private void Awake()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
         EnemyRigidbody = GetComponent<Rigidbody2D>();
+        EnemyAnimator = GetComponent<Animator>();
     }
 
     void Update()
@@ -28,6 +30,8 @@ public class Enemy : MonoBehaviour
             for (float i = 0; i < 1; i += Time.deltaTime / 10)
             {
                 EnemyRigidbody.MovePosition(Vector2.MoveTowards(transform.position, Player.transform.position, Speed * Time.deltaTime));
+                EnemyAnimator.SetFloat("HorizontalSpeed", EnemyRigidbody.velocity.x);
+                EnemyAnimator.SetFloat("VerticalSpeed", EnemyRigidbody.velocity.y);
                 yield return new WaitForSeconds(30f);
             }
         }
