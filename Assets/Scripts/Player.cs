@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
             {
                 Crate CrateScript = Helper.FindClosestGameObject("Crate", transform.position).GetComponent<Crate>();
                 CrateScript.LootCrate();
+                Destroy(Helper.FindClosestGameObject("Crate", transform.position));
             } 
         }
 
