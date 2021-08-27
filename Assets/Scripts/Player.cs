@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
 
         PlayerAnimator.SetFloat("HorizontalSpeed", Input.GetAxis("Horizontal") * Speed);
         PlayerAnimator.SetFloat("VerticalSpeed", Input.GetAxis("Vertical") * Speed);
+        PlayerAnimator.SetBool("Attack", false);
 
         PlayerRigidbody.MovePosition(transform.position + MovementInput * Time.deltaTime * Speed);
 
@@ -40,6 +41,8 @@ public class Player : MonoBehaviour
                 ShootDirection.Normalize();
                 float Angle = Mathf.Atan2(ShootDirection.y, ShootDirection.x) * Mathf.Rad2Deg;
                 Bow.eulerAngles = new Vector3(0, 0, Angle);
+
+                PlayerAnimator.SetBool("Attack", true);
             }
             else if (Hit.collider.CompareTag("Chest"))
             {
