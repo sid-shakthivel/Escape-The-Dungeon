@@ -17,6 +17,6 @@ public class UIController : MonoBehaviour
     private void Update()
     {
         HeartText.text = "Hearts: " + PlayerScript.GetHearts();
-        BulletCountText.text = "Bullets: " + PlayerScript.GetBulletCount();
+        BulletCountText.text = "Arrows: " + PlayerScript.GetArrowCount();
     }
 }

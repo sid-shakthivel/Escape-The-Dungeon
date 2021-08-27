@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chest : MonoBehaviour
+public class Crate : MonoBehaviour
 {
     private bool IsUsed;
     private Player PlayerScript;
@@ -18,7 +18,7 @@ public class Chest : MonoBehaviour
         InvokeRepeating("ReplenishSupplies", 0, 30);
     }
 
-    public void LootChest()
+    public void LootCrate()
     {
         if (!IsUsed)
         {
@@ -31,12 +31,12 @@ public class Chest : MonoBehaviour
             else if (Option == 1)
             {
                 // Increase Bullet Count
-                PlayerScript.SetBulletCount(PlayerScript.GetBulletCount() + 10);
+                PlayerScript.SetArrowCount(PlayerScript.GetArrowCount() + 10);
             }
             else
             {
                 // Increase Bullet Power
-                PlayerScript.SetBulletPower(PlayerScript.GetBulletPower() + 10);
+                PlayerScript.SetArrowPower(PlayerScript.GetArrowPower() + 10);
             }
             IsUsed = true;
         }

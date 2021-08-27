@@ -2,15 +2,25 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Rigidbody2D Bullet;
+    enum ePlayerState
+    {
+        Idle,
+        Up,
+        Down,
+        Right,
+        Left
+    }
+
+    public Rigidbody2D Arrow;
     public float Speed;
-    public float BulletSpeed;
+    public float ArrowSpeed;
 
     private Rigidbody2D PlayerRigidbody;
     private Animator PlayerAnimator;
-    private float BulletCount = 10;
+    private float ArrowCount = 10;
     private float Hearts = 10;
-    private float BulletPower = 10;
+    private float ArrowPower = 10;
+    private ePlayerState PlayerState = ePlayerState.Idle;
 
     private void Awake()
     {
@@ -24,7 +34,9 @@ public class Player : MonoBehaviour
 
         PlayerAnimator.SetFloat("HorizontalSpeed", Input.GetAxis("Horizontal") * Speed);
         PlayerAnimator.SetFloat("VerticalSpeed", Input.GetAxis("Vertical") * Speed);
-        PlayerAnimator.SetBool("Attack", false);
+        PlayerAnimator.SetBool("IsAttack", false);
+
+        SetCurrentState();
 
         PlayerRigidbody.MovePosition(transform.position + MovementInput * Time.deltaTime * Speed);
 
@@ -32,29 +44,48 @@ public class Player : MonoBehaviour
         {
             RaycastHit2D Hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
 
-            if (Hit == false)
+            if (Hit == true && Hit.collider.CompareTag("Crate"))
             {
-                Transform Bow = gameObject.transform.GetChild(0);
-                Transform Pivot = gameObject.transform.GetChild(1);
+                Crate CrateScript = Helper.FindClosestGameObject("Crate", transform.position).GetComponent<Crate>();
+                CrateScript.LootCrate();
+            } 
+        }
 
-                Vector3 ShootDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Pivot.transform.position;
-                ShootDirection.Normalize();
-                float Angle = Mathf.Atan2(ShootDirection.y, ShootDirection.x) * Mathf.Rad2Deg;
-                Bow.eulerAngles = new Vector3(0, 0, Angle);
+        if (Input.GetButtonDown("Fire"))
+        {
+            PlayerAnimator.SetBool("IsAttack", true);
+            Rigidbody2D InstaniatedArrow = Instantiate(Arrow, transform.position, Quaternion.identity);
 
-                PlayerAnimator.SetBool("Attack", true);
-            }
-            else if (Hit.collider.CompareTag("Chest"))
+            switch (PlayerState)
             {
-                Chest ChestScript = Helper.FindClosestGameObject("Chest", transform.position).GetComponent<Chest>();
-                ChestScript.LootChest();
+                case ePlayerState.Up:
+                    InstaniatedArrow.velocity = Speed * Vector2.up;
+                    break;
+                case ePlayerState.Right:
+                    InstaniatedArrow.velocity = Speed * Vector2.right;
+                    break;
+                case ePlayerState.Left:
+                    InstaniatedArrow.velocity = Speed * Vector2.left;
+                    break;
+                default:
+                    InstaniatedArrow.velocity = Speed * Vector2.down;
+                    break;
             }
         }
     }
 
-    public float GetBulletCount()
+
+    private void SetCurrentState()
     {
-        return BulletCount;
+        if (PlayerAnimator.GetFloat("HorizontalSpeed") < -0.01) PlayerState = ePlayerState.Left;
+        if (PlayerAnimator.GetFloat("HorizontalSpeed") > 0.01) PlayerState = ePlayerState.Right;
+        if (PlayerAnimator.GetFloat("VerticalSpeed") < -0.01) PlayerState = ePlayerState.Down;
+        if (PlayerAnimator.GetFloat("VerticalSpeed") > 0.01) PlayerState = ePlayerState.Up;
+    }
+
+    public float GetArrowCount()
+    {
+        return ArrowCount;
     }
 
     public float GetHearts()
@@ -62,14 +93,14 @@ public class Player : MonoBehaviour
         return Hearts;
     }
 
-    public float GetBulletPower()
+    public float GetArrowPower()
     {
-        return BulletPower;
+        return ArrowPower;
     }
 
-    public void SetBulletCount(float NewBulletCount)
+    public void SetArrowCount(float NewArrowCount)
     {
-        BulletCount = NewBulletCount;
+        ArrowCount = NewArrowCount;
     }
 
     public void SetHearts(float NewHealth)
@@ -77,8 +108,8 @@ public class Player : MonoBehaviour
         Hearts = NewHealth;
     }
 
-    public void SetBulletPower(float NewBulletPower)
+    public void SetArrowPower(float NewArrowPower)
     {
-        BulletPower = NewBulletPower;
+        ArrowPower = NewArrowPower;
     }
 }

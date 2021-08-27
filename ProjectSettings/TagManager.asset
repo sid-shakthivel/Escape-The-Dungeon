@@ -4,11 +4,12 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Chest
   - Path
   - Dungeon
   - Enemy
   - GameGenerator
+  - Crate
+  - Chest
   layers:
   - Default
   - TransparentFX
