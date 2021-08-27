@@ -11,6 +11,7 @@ public class Boss : MonoBehaviour
     private List<DungeonNode> Path = new List<DungeonNode>();
     private GameObject Player;
     private DungeonNode BossDungeonNode;
+    private Animator BossAnimator;
 
     private int PathIndex = 0;
 
@@ -18,6 +19,7 @@ public class Boss : MonoBehaviour
     {
         Player = GameObject.FindGameObjectWithTag("Player");
         Graph = GameObject.FindGameObjectWithTag("GameGenerator").GetComponent<GameGenerator>().Graph;
+        BossAnimator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -35,8 +37,10 @@ public class Boss : MonoBehaviour
     {
         if (PathIndex < Path.Count)
         {
+            Vector2 VectorToDungeon = (GameGenerator.GetDungeonPosition(Path[PathIndex].Position) - (Vector2)transform.position).normalized;
+            BossAnimator.SetFloat("HorizontalSpeed", VectorToDungeon.x);
+            BossAnimator.SetFloat("VerticalSpeed", VectorToDungeon.y);
             transform.position = Vector2.MoveTowards(transform.position, GameGenerator.GetDungeonPosition(Path[PathIndex].Position), Speed * Time.deltaTime);
-
             if ((Vector2)transform.position == GameGenerator.GetDungeonPosition(Path[PathIndex].Position))
                 PathIndex++;
         }

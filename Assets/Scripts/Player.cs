@@ -33,10 +33,13 @@ public class Player : MonoBehaviour
 
             if (Hit == false)
             {
-                Transform Gun = this.gameObject.transform.GetChild(0);
-                Vector3 ShootDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-                Rigidbody2D BulletInstance = Instantiate(Bullet, Gun.position, Quaternion.identity);
-                BulletInstance.velocity = ShootDirection * BulletSpeed;
+                Transform Bow = gameObject.transform.GetChild(0);
+                Transform Pivot = gameObject.transform.GetChild(1);
+
+                Vector3 ShootDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - Pivot.transform.position;
+                ShootDirection.Normalize();
+                float Angle = Mathf.Atan2(ShootDirection.y, ShootDirection.x) * Mathf.Rad2Deg;
+                Bow.eulerAngles = new Vector3(0, 0, Angle);
             }
             else if (Hit.collider.CompareTag("Chest"))
             {

@@ -43,7 +43,7 @@ public class GameGenerator : MonoBehaviour
     {            
         CreateDungeons();
         CreatePaths();
-        //Instantiate(BossGameObject, Dungeon.GetRandomDungeon(), Quaternion.identity);
+        Instantiate(BossGameObject, Dungeon.GetRandomDungeon(), Quaternion.identity);
     }
 
     private void CreateDungeons()
