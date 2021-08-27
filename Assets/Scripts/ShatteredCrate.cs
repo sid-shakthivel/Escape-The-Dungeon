@@ -14,7 +14,7 @@ public class ShatteredCrate : MonoBehaviour
         {
             float RandomTorque = Random.Range(-100f, 100f);
             float RandomX = Random.Range(-100f, 100f);
-            float RandomY = Random.Range(-100f, 100f); ;
+            float RandomY = Random.Range(-100f, 100f); 
             PlankRigidbody.AddTorque(RandomTorque);
             PlankRigidbody.AddForce(new Vector2(RandomX, RandomY));
         }

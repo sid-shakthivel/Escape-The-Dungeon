@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -14,6 +15,7 @@ public class Player : MonoBehaviour
     public Rigidbody2D Arrow;
     public float Speed;
     public float ArrowSpeed;
+    public GameObject ShatteredCrate;
 
     private Rigidbody2D PlayerRigidbody;
     private Animator PlayerAnimator;
@@ -46,10 +48,13 @@ public class Player : MonoBehaviour
 
             if (Hit == true && Hit.collider.CompareTag("Crate"))
             {
-                Crate CrateScript = Helper.FindClosestGameObject("Crate", transform.position).GetComponent<Crate>();
+                GameObject ClosestCrate = Helper.FindClosestGameObject("Crate", transform.position);
+                Crate CrateScript = ClosestCrate.GetComponent<Crate>();
                 CrateScript.LootCrate();
-                Destroy(Helper.FindClosestGameObject("Crate", transform.position));
-            } 
+                GameObject ClosestShatteredCrate = Instantiate(ShatteredCrate, ClosestCrate.transform.position, Quaternion.identity);
+                Destroy(ClosestCrate);
+                StartCoroutine(DestroyShatteredChest(ClosestShatteredCrate));
+            }
         }
 
         if (Input.GetButtonDown("Fire"))
@@ -75,6 +80,11 @@ public class Player : MonoBehaviour
         }
     }
 
+    IEnumerator DestroyShatteredChest(GameObject ClosestShatteredChest)
+    {
+        yield return new WaitForSeconds(1);
+        Destroy(ClosestShatteredChest);
+    }
 
     private void SetCurrentState()
     {
