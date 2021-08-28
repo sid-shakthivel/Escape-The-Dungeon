@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     public Rigidbody2D Arrow;
     public float Speed;
     public float ArrowSpeed;
+    public Joystick joystick;
 
     private Rigidbody2D PlayerRigidbody;
     private Animator PlayerAnimator;
@@ -31,10 +32,16 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 MovementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+        //Vector3 MovementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 
-        PlayerAnimator.SetFloat("HorizontalSpeed", Input.GetAxis("Horizontal") * Speed);
-        PlayerAnimator.SetFloat("VerticalSpeed", Input.GetAxis("Vertical") * Speed);
+        Vector3 MovementInput = new Vector3(joystick.Horizontal, joystick.Vertical, 0);
+
+        //PlayerAnimator.SetFloat("HorizontalSpeed", Input.GetAxis("Horizontal") * Speed);
+        //PlayerAnimator.SetFloat("VerticalSpeed", Input.GetAxis("Vertical") * Speed);
+
+        //PlayerAnimator.SetFloat("VerticalSpeed", joystick.Vertical * Speed);
+        PlayerAnimator.SetFloat("HorizontalSpeed", joystick.Horizontal * Speed);
+
         PlayerAnimator.SetBool("IsAttack", false);
 
         SetCurrentState();

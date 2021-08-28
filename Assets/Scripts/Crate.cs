@@ -8,6 +8,7 @@ public class Crate : MonoBehaviour
     public GameObject Heart;
     public GameObject Coin;
     public GameObject ArrowPickup;
+    
 
     private bool IsUsed;
     private Player PlayerScript;
