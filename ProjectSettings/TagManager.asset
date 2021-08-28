@@ -12,7 +12,9 @@ TagManager:
   - Heart
   - ArrowPickup
   - Coin
-  - Arow
+  - Joystick
+  - Arrow
+  - Boss
   layers:
   - Default
   - TransparentFX

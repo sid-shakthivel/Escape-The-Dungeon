@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviour
 {
@@ -32,11 +33,9 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        //Vector3 MovementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-        //PlayerAnimator.SetFloat("HorizontalSpeed", Input.GetAxis("Horizontal") * Speed);
-        //PlayerAnimator.SetFloat("VerticalSpeed", Input.GetAxis("Vertical") * Speed);
+        Vector3 MovementInput;
 
-        Vector3 MovementInput = new Vector3(joystick.Horizontal, joystick.Vertical, 0);
+        MovementInput = new Vector3(joystick.Horizontal, joystick.Vertical, 0);
 
         if (joystick.Vertical > 0.5f || joystick.Vertical < -0.5f)
             PlayerAnimator.SetFloat("VerticalSpeed", joystick.Vertical * Speed);
@@ -47,6 +46,10 @@ public class Player : MonoBehaviour
             PlayerAnimator.SetFloat("HorizontalSpeed", joystick.Horizontal * Speed);
         else
             PlayerAnimator.SetFloat("HorizontalSpeed", 0);
+
+        //MovementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+        //PlayerAnimator.SetFloat("HorizontalSpeed", Input.GetAxis("Horizontal") * Speed);
+        //PlayerAnimator.SetFloat("VerticalSpeed", Input.GetAxis("Vertical") * Speed);
 
         PlayerAnimator.SetBool("IsAttack", false);
 
@@ -85,6 +88,16 @@ public class Player : MonoBehaviour
                 default:
                     InstaniatedArrow.velocity = Speed * Vector2.down;
                     break;
+            }
+        }
+
+        if (Input.touchCount == 1)
+        {
+            Ray raycast = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+            RaycastHit raycastHit;
+            if (Physics.Raycast(raycast, out raycastHit) == false)
+            {
+                Debug.Log("Something Hit");
             }
         }
     }
