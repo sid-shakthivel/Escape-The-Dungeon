@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
     public Rigidbody2D Arrow;
     public float Speed;
     public float ArrowSpeed;
-    public GameObject ShatteredCrate;
 
     private Rigidbody2D PlayerRigidbody;
     private Animator PlayerAnimator;
@@ -51,9 +50,6 @@ public class Player : MonoBehaviour
                 GameObject ClosestCrate = Helper.FindClosestGameObject("Crate", transform.position);
                 Crate CrateScript = ClosestCrate.GetComponent<Crate>();
                 CrateScript.LootCrate();
-                GameObject ClosestShatteredCrate = Instantiate(ShatteredCrate, ClosestCrate.transform.position, Quaternion.identity);
-                Destroy(ClosestCrate);
-                StartCoroutine(DestroyShatteredChest(ClosestShatteredCrate));
             }
         }
 
@@ -78,12 +74,6 @@ public class Player : MonoBehaviour
                     break;
             }
         }
-    }
-
-    IEnumerator DestroyShatteredChest(GameObject ClosestShatteredChest)
-    {
-        yield return new WaitForSeconds(1);
-        Destroy(ClosestShatteredChest);
     }
 
     private void SetCurrentState()

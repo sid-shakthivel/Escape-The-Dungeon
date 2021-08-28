@@ -9,7 +9,10 @@ TagManager:
   - Enemy
   - GameGenerator
   - Crate
-  - Chest
+  - Heart
+  - ArrowPickup
+  - Coin
+  - Arow
   layers:
   - Default
   - TransparentFX

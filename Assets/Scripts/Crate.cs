@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Crate : MonoBehaviour
 {
+    public GameObject ShatteredCrate;
+    public GameObject Heart;
+    public GameObject Coin;
+    public GameObject ArrowPickup;
+
     private bool IsUsed;
     private Player PlayerScript;
 
@@ -13,41 +18,30 @@ public class Crate : MonoBehaviour
         PlayerScript = PlayerObject.GetComponent<Player>();
     }
 
-    private void Start()
-    {
-        InvokeRepeating("ReplenishSupplies", 0, 30);
-    }
-
     public void LootCrate()
     {
-        if (!IsUsed)
+        GameObject ClosestShatteredCrate = Instantiate(ShatteredCrate, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+        StartCoroutine(DestroyShatteredChest(ClosestShatteredCrate));
+
+        int Option = Random.Range(0, 3);
+        switch (Option)
         {
-            int Option = Random.Range(0, 3);
-            if (Option == 0)
-            {
-                // Increase Health
-                PlayerScript.SetHearts(PlayerScript.GetHearts() + 10);
-            }
-            else if (Option == 1)
-            {
-                // Increase Bullet Count
-                PlayerScript.SetArrowCount(PlayerScript.GetArrowCount() + 10);
-            }
-            else
-            {
-                // Increase Bullet Power
-                PlayerScript.SetArrowPower(PlayerScript.GetArrowPower() + 10);
-            }
-            IsUsed = true;
-        }
-        else
-        {
-            // If During That Time Flash Message
+            case 0:
+                Instantiate(Coin, transform.position, Quaternion.identity);
+                break;
+            case 1:
+                Instantiate(Heart, transform.position, Quaternion.identity);
+                break;
+            case 2:
+                Instantiate(ArrowPickup, transform.position, Quaternion.identity);
+                break;
         }
     }
 
-    private void ReplenishSupplies()
+    IEnumerator DestroyShatteredChest(GameObject ClosestShatteredChest)
     {
-        IsUsed = false;
+        yield return new WaitForSeconds(1);
+        Destroy(ClosestShatteredChest);
     }
 }

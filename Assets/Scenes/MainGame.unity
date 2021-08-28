@@ -475,6 +475,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crate
       objectReference: {fileID: 0}
+    - target: {fileID: 3510228877773750507, guid: 453a2862ae3064772abeb85605c35292, type: 3}
+      propertyPath: Coin
+      value: 
+      objectReference: {fileID: 5454164113304087741, guid: 71e10990190f940f5a06148850cd9b22, type: 3}
+    - target: {fileID: 3510228877773750507, guid: 453a2862ae3064772abeb85605c35292, type: 3}
+      propertyPath: Heart
+      value: 
+      objectReference: {fileID: 699265157014821683, guid: 91088acc6a9284d8a8416ac2c5a12f4c, type: 3}
+    - target: {fileID: 3510228877773750507, guid: 453a2862ae3064772abeb85605c35292, type: 3}
+      propertyPath: ArrowPickup
+      value: 
+      objectReference: {fileID: 3942262320911417683, guid: 00bee4f210021444f95eb5ed630576a2, type: 3}
+    - target: {fileID: 3510228877773750507, guid: 453a2862ae3064772abeb85605c35292, type: 3}
+      propertyPath: ShatteredCrate
+      value: 
+      objectReference: {fileID: 3503917599050340177, guid: da9f18e72eee04cad9185aed21940322, type: 3}
     - target: {fileID: 3510228877773750509, guid: 453a2862ae3064772abeb85605c35292, type: 3}
       propertyPath: m_RootOrder
       value: 4
