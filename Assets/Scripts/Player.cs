@@ -33,14 +33,20 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         //Vector3 MovementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-
-        Vector3 MovementInput = new Vector3(joystick.Horizontal, joystick.Vertical, 0);
-
         //PlayerAnimator.SetFloat("HorizontalSpeed", Input.GetAxis("Horizontal") * Speed);
         //PlayerAnimator.SetFloat("VerticalSpeed", Input.GetAxis("Vertical") * Speed);
 
-        //PlayerAnimator.SetFloat("VerticalSpeed", joystick.Vertical * Speed);
-        PlayerAnimator.SetFloat("HorizontalSpeed", joystick.Horizontal * Speed);
+        Vector3 MovementInput = new Vector3(joystick.Horizontal, joystick.Vertical, 0);
+
+        if (joystick.Vertical > 0.5f || joystick.Vertical < -0.5f)
+            PlayerAnimator.SetFloat("VerticalSpeed", joystick.Vertical * Speed);
+        else
+            PlayerAnimator.SetFloat("VerticalSpeed", 0);
+
+        if (joystick.Horizontal > 0.5f || joystick.Horizontal < -0.5f)
+            PlayerAnimator.SetFloat("HorizontalSpeed", joystick.Horizontal * Speed);
+        else
+            PlayerAnimator.SetFloat("HorizontalSpeed", 0);
 
         PlayerAnimator.SetBool("IsAttack", false);
 
