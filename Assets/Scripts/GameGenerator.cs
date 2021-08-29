@@ -1,50 +1,25 @@
 using System.Collections.Generic;
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-public class DungeonNode 
-{
-    public Vector2 Position;
-    public int Cost;
-    public int DjkstraDistance = int.MaxValue;
-    public List<DungeonNode> Neighbours = new List<DungeonNode>();
-
-    public DungeonNode(Vector2 DungeonNodePosition)
-    {
-        Position = DungeonNodePosition;
-    }
-
-    public void Set(int Distance, DungeonNode NeighbourNode)
-    {
-        Cost = Distance;
-        Neighbours.Add(NeighbourNode);
-    }
-}
-
-public class DungeonNodeComparer: IComparer<DungeonNode>
-{
-    public int Compare(DungeonNode Node1, DungeonNode Node2)
-    {
-        return Node1.DjkstraDistance - Node2.DjkstraDistance;
-    }
-}
-
 public class GameGenerator : MonoBehaviour
 {
-    public GameObject DungeonGameObject;
-    public GameObject PathGameObject;
-    public GameObject BossGameObject;
+    public Tilemap FloorTileMap;
+    public Tilemap WallTileMap;
+    public TileBase FloorTile;
+    public TileBase WallTile;
+    public TileBase RandomTile;
 
-    public List<DungeonNode> Graph = new List<DungeonNode>();
-
+    private int Iterations = 10;
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
 
     private void Start()
-    {            
+    {
         CreateDungeons();
         CreatePaths();
-        //Instantiate(BossGameObject, Dungeon.GetRandomDungeon(), Quaternion.identity);
     }
 
     private void CreateDungeons()
@@ -72,11 +47,90 @@ public class GameGenerator : MonoBehaviour
 
     private void CreateDungeon(Vector2 DungeonVector)
     {
-        GameObject NewDungeon = Instantiate(DungeonGameObject, GetDungeonPosition(DungeonVector), Quaternion.identity);
-        NewDungeon.transform.SetParent(transform);
         Grid[(int)DungeonVector.x, (int)DungeonVector.y] = 1;
-        Graph.Add(new DungeonNode(DungeonVector));
-        OldDungeon = DungeonVector;
+        HashSet<Vector2> TilePositions = RunRandomWalk(GetDungeonPosition(DungeonVector));
+        foreach (Vector2 TilePosition in TilePositions)
+            PaintSingleTile(FloorTileMap, FloorTile, TilePosition);
+        CreateWalls(TilePositions);
+    }
+
+    public static Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
+    {
+        Vector2 GridCentreVector = new Vector2(2, 2);
+        Vector2 CentreVector = new Vector2(0, 0);
+        return ((GridDungeonVector - GridCentreVector) * 15) + CentreVector;
+    }
+
+    private void PaintSingleTile(Tilemap CurrentTileMap, TileBase Tile, Vector2 Position)
+    {
+        CurrentTileMap.SetTile(CurrentTileMap.WorldToCell(Position), Tile);
+    }
+
+    private HashSet<Vector2> RunRandomWalk(Vector2 StartPosition)
+    {
+        HashSet<Vector2> TilePositions = new HashSet<Vector2>();
+        Vector2 CurrentPosition = StartPosition;
+        for (int i = 0; i < Iterations; i++)
+        {
+            TilePositions.UnionWith(RandomWalk(CurrentPosition, 10));
+            CurrentPosition = TilePositions.ElementAt(Random.Range(0, TilePositions.Count));
+        }
+        return TilePositions;
+    }
+
+    private HashSet<Vector2> RandomWalk(Vector2 StartPosition, int WalkLength)
+    {
+        HashSet<Vector2> Path = new HashSet<Vector2>();
+        Vector2 CurrentPosition = StartPosition;
+
+        for (int i = 0; i < WalkLength; i++)
+        {
+            Path.Add(CurrentPosition);
+            CurrentPosition = CurrentPosition + GetRandomDirection();
+        }
+
+        return Path;
+    }
+
+    private void CreateWalls(HashSet<Vector2> FloorPositions)
+    {
+        foreach (Vector2 FloorPosition in FloorPositions)
+        {
+            foreach (Vector2 Direction in CardinalDirections)
+            {
+                Vector2 NeighbourPosition = FloorPosition + Direction;
+                if (FloorPositions.Contains(NeighbourPosition) == false)
+                    PaintSingleTile(WallTileMap, WallTile, NeighbourPosition);
+            }
+        }
+    }
+
+    private List<Vector2> CardinalDirections = new List<Vector2>() { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
+
+    private Vector2 GetRandomDirection()
+    {
+        return CardinalDirections.ElementAt(Random.Range(0, CardinalDirections.Count));
+    }
+
+    private Vector2 GetNewCell(int MinX, int MaxX, int MinY, int MaxY)
+    {
+        return new Vector2(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
+    }
+
+    private bool CheckForHorizontalSpaceInGrid(int j)
+    {
+        for (int i = 0; i < 5; i++)
+            if (Grid[i, j] != 1)
+                return true;
+        return false;
+    }
+
+    private bool CheckForVerticalSpaceInGrid(int j)
+    {
+        for (int i = 0; i < 5; i++)
+            if (Grid[j, i] != 1)
+                return true;
+        return false;
     }
 
     private void CreatePaths()
@@ -106,46 +160,31 @@ public class GameGenerator : MonoBehaviour
     {
         Vector2 ScaledPosition1 = GetDungeonPosition(Position1);
         Vector2 ScaledPosition2 = GetDungeonPosition(Position2);
-        Vector2 ScaledPosition = (ScaledPosition1 + ScaledPosition2) / 2;
 
-        float Size = Position1.x == Position2.x ? Mathf.Abs(((ScaledPosition1 - ScaledPosition2).y + 10)) : Mathf.Abs(((ScaledPosition1 - ScaledPosition2).x + 10));
+        HashSet<Vector2> TilePositions = new HashSet<Vector2>();
 
-        PathGameObject.transform.localScale = new Vector3(5f, Size, 0);
-        GameObject NewPath = Instantiate(PathGameObject, ScaledPosition, ScaledPosition1.y == ScaledPosition2.y ? Quaternion.Euler(0, 0, 90) : Quaternion.identity);
-        NewPath.transform.SetParent(gameObject.transform);
+        if (ScaledPosition1.x == ScaledPosition2.x)
+        {
+            Vector2 CurrentPosition = ScaledPosition1;
 
-        DungeonNode Node1 = Graph.Find(Node => Node.Position == Position1);
-        DungeonNode Node2 = Graph.Find(Node => Node.Position == Position2);
+            while (CurrentPosition.Equals(ScaledPosition2) == false)
+            {
+                TilePositions.Add(CurrentPosition);
+                PaintSingleTile(FloorTileMap, FloorTile, CurrentPosition);
+                CurrentPosition += new Vector2(0, 1);
+            }
+        } else
+        {
+            Vector2 CurrentPosition = ScaledPosition1;
 
-        Node2.Set((int)Size, Node1);
-        Node1.Set((int)Size, Node2);
-    }
+            while (CurrentPosition.Equals(ScaledPosition2) == false)
+            {
+                TilePositions.Add(CurrentPosition);
+                PaintSingleTile(FloorTileMap, FloorTile, CurrentPosition);
+                CurrentPosition += new Vector2(1, 0);
+            }
+        }
 
-    public static Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
-    {
-        Vector2 GridCentreVector = new Vector2(2, 2);
-        Vector2 CentreVector = new Vector2(0, 0);
-        return ((GridDungeonVector - GridCentreVector) * 20) + CentreVector;
-    }
-
-    private Vector2 GetNewCell(int MinX, int MaxX, int MinY, int MaxY)
-    {
-        return new Vector2(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
-    }
-
-    private bool CheckForHorizontalSpaceInGrid(int j)
-    {
-        for (int i = 0; i < 5; i++)
-            if (Grid[i, j] != 1)
-                return true;
-        return false;
-    }
-
-    private bool CheckForVerticalSpaceInGrid(int j)
-    {
-        for (int i = 0; i < 5; i++)
-            if (Grid[j, i] != 1)
-                return true;
-        return false;
+        CreateWalls(TilePositions);
     }
 }
