@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class Dungeon : MonoBehaviour
 {
-    public GameObject Chest;
+    public GameObject Crate;
     public GameObject Enemy;
-    public GameObject Boss;
 
     private SpriteRenderer DungeonSpriteRenderer;
+    private int EnemyCount;
 
     private void Awake()
     {
@@ -15,18 +15,22 @@ public class Dungeon : MonoBehaviour
 
     void Start()
     {
-        //Invoke("CreateChest", 0.5f);
+        Invoke("CreateCrate", 0.5f);
         //InvokeRepeating("CreateEnemy", 0.5f, 120f);
     }
 
-    private void CreateChest()
+    private void CreateCrate()
     {
-        Create(Chest);
+        Create(Crate);
     }
 
     private void CreateEnemy()
     {
-        Create(Enemy);
+        if (EnemyCount < 10)
+        {
+            Create(Enemy);
+            EnemyCount++;
+        }
     }
 
     private void Create(GameObject Object)
@@ -34,7 +38,8 @@ public class Dungeon : MonoBehaviour
         Vector3 DungeonBounds = DungeonSpriteRenderer.bounds.extents;
         Vector2 DungeonPosition = transform.position;
         Vector2 Position = GetRandomPosition(DungeonPosition.x - DungeonBounds.x + 1, DungeonPosition.x + DungeonBounds.x - 1, DungeonPosition.y - DungeonBounds.y + 1, DungeonPosition.y + DungeonBounds.y - 1);
-        Instantiate(Object, Position, Quaternion.identity);
+        GameObject InstaniatedObject = Instantiate(Object, Position, Quaternion.identity);
+        InstaniatedObject.transform.SetParent(gameObject.transform);
     }
 
     private Vector2 GetRandomPosition(float MinX, float MaxX, float MinY, float MaxY)
