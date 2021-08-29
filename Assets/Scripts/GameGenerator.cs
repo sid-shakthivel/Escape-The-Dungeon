@@ -12,19 +12,22 @@ public class GameGenerator : MonoBehaviour
     public TileBase WallTile;
     public TileBase RandomTile;
 
-    private int Iterations = 10;
+    private int Iterations = 30;
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
 
     private void Start()
     {
-        CreateDungeons();
-        CreatePaths();
+        HashSet<Vector2> AllTiles = CreateDungeons();
+        AllTiles.UnionWith(CreatePaths());
+        CreateWalls(AllTiles);
     }
 
-    private void CreateDungeons()
+    private HashSet<Vector2> CreateDungeons()
     {
-        CreateDungeon(GetNewCell(2, 2, 2, 2));
+        HashSet<Vector2> AllTiles = new HashSet<Vector2>();
+
+        AllTiles.UnionWith(CreateDungeon(GetNewCell(2, 2, 2, 2)));
 
         int DungeonCount = 0;
         while (DungeonCount < 5)
@@ -40,25 +43,27 @@ public class GameGenerator : MonoBehaviour
             if (Grid[(int)NewDungeon.x, (int)NewDungeon.y] != 1)
             {
                 DungeonCount += 1;
-                CreateDungeon(NewDungeon);
+                AllTiles.UnionWith(CreateDungeon(NewDungeon));
             }
         }
+
+        return AllTiles;
     }
 
-    private void CreateDungeon(Vector2 DungeonVector)
+    private HashSet<Vector2> CreateDungeon(Vector2 DungeonVector)
     {
         Grid[(int)DungeonVector.x, (int)DungeonVector.y] = 1;
         HashSet<Vector2> TilePositions = RunRandomWalk(GetDungeonPosition(DungeonVector));
         foreach (Vector2 TilePosition in TilePositions)
             PaintSingleTile(FloorTileMap, FloorTile, TilePosition);
-        CreateWalls(TilePositions);
+        return TilePositions;
     }
 
     public static Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
     {
         Vector2 GridCentreVector = new Vector2(2, 2);
         Vector2 CentreVector = new Vector2(0, 0);
-        return ((GridDungeonVector - GridCentreVector) * 15) + CentreVector;
+        return ((GridDungeonVector - GridCentreVector) * 20) + CentreVector;
     }
 
     private void PaintSingleTile(Tilemap CurrentTileMap, TileBase Tile, Vector2 Position)
@@ -72,7 +77,7 @@ public class GameGenerator : MonoBehaviour
         Vector2 CurrentPosition = StartPosition;
         for (int i = 0; i < Iterations; i++)
         {
-            TilePositions.UnionWith(RandomWalk(CurrentPosition, 10));
+            TilePositions.UnionWith(RandomWalk(CurrentPosition, 30));
             CurrentPosition = TilePositions.ElementAt(Random.Range(0, TilePositions.Count));
         }
         return TilePositions;
@@ -133,8 +138,10 @@ public class GameGenerator : MonoBehaviour
         return false;
     }
 
-    private void CreatePaths()
+    private HashSet<Vector2> CreatePaths()
     {
+        HashSet<Vector2> AllTiles = new HashSet<Vector2>();
+
         for (int i = 0; i < 5; i++)
         {
             for (int j = 0; j < 5; j++)
@@ -142,7 +149,7 @@ public class GameGenerator : MonoBehaviour
                     for (int k = j + 1; k < 5; k++)
                         if (Grid[i, k] == 1)
                         {
-                            CreatePath(new Vector2(i, j), new Vector2(i, k));
+                            AllTiles.UnionWith(CreatePath(new Vector2(i, j), new Vector2(i, k)));
                             j = k;
                         }
             for (int j = 0; j < 5; j++)
@@ -150,13 +157,15 @@ public class GameGenerator : MonoBehaviour
                     for (int k = j + 1; k < 5; k++)
                         if (Grid[k, i] == 1)
                         {
-                            CreatePath(new Vector2(j, i), new Vector2(k, i));
+                            AllTiles.UnionWith(CreatePath(new Vector2(j, i), new Vector2(k, i)));
                             j = k;
                         }
         }
+
+        return AllTiles;
     }
 
-    private void CreatePath(Vector2 Position1, Vector2 Position2)
+    private HashSet<Vector2> CreatePath(Vector2 Position1, Vector2 Position2)
     {
         Vector2 ScaledPosition1 = GetDungeonPosition(Position1);
         Vector2 ScaledPosition2 = GetDungeonPosition(Position2);
@@ -185,6 +194,6 @@ public class GameGenerator : MonoBehaviour
             }
         }
 
-        CreateWalls(TilePositions);
+        return TilePositions;
     }
 }
