@@ -16,7 +16,6 @@ public class Player : MonoBehaviour
     public Rigidbody2D Arrow;
     public float Speed;
     public float ArrowSpeed;
-    public Joystick joystick;
 
     private Rigidbody2D PlayerRigidbody;
     private Animator PlayerAnimator;
@@ -24,6 +23,8 @@ public class Player : MonoBehaviour
     private float Hearts = 10;
     private float ArrowPower = 10;
     private ePlayerState PlayerState = ePlayerState.Idle;
+    private Touch touch;
+    private float TouchDuration;
 
     private void Awake()
     {
@@ -35,21 +36,10 @@ public class Player : MonoBehaviour
     {
         Vector3 MovementInput;
 
-        MovementInput = new Vector3(joystick.Horizontal, joystick.Vertical, 0);
+        MovementInput = new Vector3(SimpleInput.GetAxis("Horizontal"), SimpleInput.GetAxis("Vertical"), 0);
 
-        if (joystick.Vertical > 0.5f || joystick.Vertical < -0.5f)
-            PlayerAnimator.SetFloat("VerticalSpeed", joystick.Vertical * Speed);
-        else
-            PlayerAnimator.SetFloat("VerticalSpeed", 0);
-
-        if (joystick.Horizontal > 0.5f || joystick.Horizontal < -0.5f)
-            PlayerAnimator.SetFloat("HorizontalSpeed", joystick.Horizontal * Speed);
-        else
-            PlayerAnimator.SetFloat("HorizontalSpeed", 0);
-
-        //MovementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
-        //PlayerAnimator.SetFloat("HorizontalSpeed", Input.GetAxis("Horizontal") * Speed);
-        //PlayerAnimator.SetFloat("VerticalSpeed", Input.GetAxis("Vertical") * Speed);
+        PlayerAnimator.SetFloat("HorizontalSpeed", MovementInput.x * Speed);
+        PlayerAnimator.SetFloat("VerticalSpeed", MovementInput.y * Speed);
 
         PlayerAnimator.SetBool("IsAttack", false);
 
@@ -57,48 +47,33 @@ public class Player : MonoBehaviour
 
         PlayerRigidbody.MovePosition(transform.position + MovementInput * Time.deltaTime * Speed);
 
-        if (Input.GetMouseButtonUp(0))
+        if (Input.touchCount > 0)
         {
-            RaycastHit2D Hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Input.mousePosition));
+            TouchDuration += Time.deltaTime;
+            touch = Input.GetTouch(0);
 
-            if (Hit == true && Hit.collider.CompareTag("Crate"))
-            {
-                GameObject ClosestCrate = Helper.FindClosestGameObject("Crate", transform.position);
-                Crate CrateScript = ClosestCrate.GetComponent<Crate>();
-                CrateScript.LootCrate();
-            }
+            if (touch.phase == TouchPhase.Ended && TouchDuration < 0.2f)
+                StartCoroutine("SingleOrDoubleTap");
         }
+        else
+            TouchDuration = 0f;
+
+        if (Input.GetMouseButtonUp(0))
+            CheckForChest(Input.mousePosition);
 
         if (Input.GetButtonDown("Fire"))
-        {
-            PlayerAnimator.SetBool("IsAttack", true);
-            Rigidbody2D InstaniatedArrow = Instantiate(Arrow, transform.position, Quaternion.identity);
+            FireArrow();
+    }
 
-            switch (PlayerState)
-            {
-                case ePlayerState.Up:
-                    InstaniatedArrow.velocity = Speed * Vector2.up;
-                    break;
-                case ePlayerState.Right:
-                    InstaniatedArrow.velocity = Speed * Vector2.right;
-                    break;
-                case ePlayerState.Left:
-                    InstaniatedArrow.velocity = Speed * Vector2.left;
-                    break;
-                default:
-                    InstaniatedArrow.velocity = Speed * Vector2.down;
-                    break;
-            }
-        }
-
-        if (Input.touchCount == 1)
+    IEnumerator SingleOrDoubleTap()
+    {
+        yield return new WaitForSeconds(0.3f);
+        if (touch.tapCount == 1)
+            FireArrow();
+        else
         {
-            Ray raycast = Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-            RaycastHit raycastHit;
-            if (Physics.Raycast(raycast, out raycastHit) == false)
-            {
-                Debug.Log("Something Hit");
-            }
+            StopCoroutine("SingleOrDoubleTap");
+            CheckForChest(touch.position);
         }
     }
 
@@ -108,6 +83,40 @@ public class Player : MonoBehaviour
         if (PlayerAnimator.GetFloat("HorizontalSpeed") > 0.01) PlayerState = ePlayerState.Right;
         if (PlayerAnimator.GetFloat("VerticalSpeed") < -0.01) PlayerState = ePlayerState.Down;
         if (PlayerAnimator.GetFloat("VerticalSpeed") > 0.01) PlayerState = ePlayerState.Up;
+    }
+
+    private void CheckForChest (Vector3 Position)
+    {
+        RaycastHit2D Hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Position));
+
+        if (Hit == true && Hit.collider.CompareTag("Crate"))
+        {
+            GameObject ClosestCrate = Helper.FindClosestGameObject("Crate", transform.position);
+            Crate CrateScript = ClosestCrate.GetComponent<Crate>();
+            CrateScript.LootCrate();
+        }
+    }
+
+    private void FireArrow()
+    {
+        PlayerAnimator.SetBool("IsAttack", true);
+        Rigidbody2D InstaniatedArrow = Instantiate(Arrow, transform.position, Quaternion.identity);
+
+        switch (PlayerState)
+        {
+            case ePlayerState.Up:
+                InstaniatedArrow.velocity = Speed * Vector2.up;
+                break;
+            case ePlayerState.Right:
+                InstaniatedArrow.velocity = Speed * Vector2.right;
+                break;
+            case ePlayerState.Left:
+                InstaniatedArrow.velocity = Speed * Vector2.left;
+                break;
+            default:
+                InstaniatedArrow.velocity = Speed * Vector2.down;
+                break;
+        }
     }
 
     public float GetArrowCount()
