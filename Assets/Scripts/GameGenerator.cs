@@ -9,6 +9,7 @@ public class GameGenerator : MonoBehaviour
     public Tilemap WallTileMap;
     public TileBase FloorTile;
     public TileBase WallTile;
+    public TileBase RandomTile;
 
     private int Iterations = 30;
     private int[,] Grid = new int[5, 5];
@@ -163,16 +164,16 @@ public class GameGenerator : MonoBehaviour
         Vector2 ScaledPosition2 = GetDungeonPosition(Position2);
 
         Vector2 CurrentPosition1 = ScaledPosition1;
-        Vector2 CurrentPosition2 = ScaledPosition1 + (ScaledPosition1.x == ScaledPosition2.x ? new Vector2(0, 1) : new Vector2(1, 0));
+        Vector2 CurrentPosition2 = ScaledPosition1 + (ScaledPosition1.x == ScaledPosition2.x ? new Vector2(1, 0) : new Vector2(0, 1));
 
         while (CurrentPosition1.Equals(ScaledPosition2) == false)
         {
             AllTiles.Add(CurrentPosition1);
-            //AllTiles.Add(CurrentPosition2);
+            AllTiles.Add(CurrentPosition2);
             PaintSingleTile(FloorTileMap, FloorTile, CurrentPosition1);
-            //PaintSingleTile(FloorTileMap, FloorTile, CurrentPosition2);
+            PaintSingleTile(FloorTileMap, FloorTile, CurrentPosition2);
             CurrentPosition1 += (ScaledPosition1.x == ScaledPosition2.x ? new Vector2(0, 1) : new Vector2(1, 0));
-            //CurrentPosition2 += (ScaledPosition1.x == ScaledPosition2.x ? new Vector2(0, 1) : new Vector2(1, 0));
+            CurrentPosition2 += (ScaledPosition1.x == ScaledPosition2.x ? new Vector2(0, 1) : new Vector2(1, 0));
         }
     }
 }
