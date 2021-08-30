@@ -1090,7 +1090,8 @@ MonoBehaviour:
   WallTileMap: {fileID: 1094996740}
   FloorTile: {fileID: 11400000, guid: 27cde0052b96b4a65a052858f659a8dd, type: 2}
   WallTile: {fileID: 11400000, guid: 9c23b9077c5524be48cd763a5840ae46, type: 2}
-  RandomTile: {fileID: 11400000, guid: d1e934a9441eb42e2926eb17973799b2, type: 2}
+  RandomTile: {fileID: 11400000, guid: ed6e8c43f946545a98c4e6fe89ffb5ff, type: 2}
+  Crate: {fileID: 3510228877773750504, guid: 453a2862ae3064772abeb85605c35292, type: 3}
 --- !u!4 &1989034201
 Transform:
   m_ObjectHideFlags: 0

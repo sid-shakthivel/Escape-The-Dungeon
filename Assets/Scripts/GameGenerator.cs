@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -10,10 +11,12 @@ public class GameGenerator : MonoBehaviour
     public TileBase FloorTile;
     public TileBase WallTile;
     public TileBase RandomTile;
+    public GameObject Crate;
 
     private int Iterations = 30;
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
+    private int ChestCount = 0;
 
     private HashSet<Vector2> AllTiles = new HashSet<Vector2>();
 
@@ -22,6 +25,23 @@ public class GameGenerator : MonoBehaviour
         CreateDungeons();
         CreatePaths();
         CreateWalls(AllTiles);
+        CreateCrates();
+        StartCoroutine(CreateCrates());
+    }
+
+    private IEnumerator CreateCrates()
+    {
+        while (true)
+        {
+            while (ChestCount < 10)
+            {
+                Vector2 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
+                Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
+                Instantiate(Crate, Position, Quaternion.identity);
+                ChestCount++;
+            }
+            yield return new WaitForSecondsRealtime(60);
+        }
     }
 
     private void CreateDungeons()

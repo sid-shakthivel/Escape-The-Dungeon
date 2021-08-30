@@ -15,7 +15,6 @@ public class Player : MonoBehaviour
 
     public Rigidbody2D Arrow;
     public float Speed;
-    public float ArrowSpeed;
 
     private Rigidbody2D PlayerRigidbody;
     private Animator PlayerAnimator;
@@ -92,9 +91,9 @@ public class Player : MonoBehaviour
 
         if (Hit == true && Hit.collider.CompareTag("Crate"))
         {
-            GameObject ClosestCrate = Helper.FindClosestGameObject("Crate", transform.position);
-            Crate CrateScript = ClosestCrate.GetComponent<Crate>();
-            CrateScript.LootCrate();
+            Crate CrateScript = Hit.collider.GetComponent<Crate>();
+            //CrateScript.LootCrate();
+            StartCoroutine(CrateScript.LootCrate());
         }
     }
 

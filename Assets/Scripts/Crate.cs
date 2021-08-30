@@ -8,41 +8,30 @@ public class Crate : MonoBehaviour
     public GameObject Heart;
     public GameObject Coin;
     public GameObject ArrowPickup;
-    
 
-    private bool IsUsed;
-    private Player PlayerScript;
+    private GameObject ClosestShatteredCrate;
 
-    private void Awake()
+    public IEnumerator LootCrate()
     {
-        GameObject PlayerObject = GameObject.FindGameObjectWithTag("Player");
-        PlayerScript = PlayerObject.GetComponent<Player>();
-    }
-
-    public void LootCrate()
-    {
-        GameObject ClosestShatteredCrate = Instantiate(ShatteredCrate, transform.position, Quaternion.identity);
+        Vector3 ChestPosition = transform.position;
+        ClosestShatteredCrate = Instantiate(ShatteredCrate, transform.position, Quaternion.identity);
         Destroy(gameObject);
-        StartCoroutine(DestroyShatteredChest(ClosestShatteredCrate));
+        
+        yield return new WaitForSeconds(1);
+        Destroy(ClosestShatteredCrate);
 
         int Option = Random.Range(0, 3);
         switch (Option)
         {
             case 0:
-                Instantiate(Coin, transform.position, Quaternion.identity);
+                Instantiate(Coin, ChestPosition, Quaternion.identity);
                 break;
             case 1:
-                Instantiate(Heart, transform.position, Quaternion.identity);
+                Instantiate(Heart, ChestPosition, Quaternion.identity);
                 break;
             case 2:
-                Instantiate(ArrowPickup, transform.position, Quaternion.identity);
+                Instantiate(ArrowPickup, ChestPosition, Quaternion.identity);
                 break;
         }
-    }
-
-    IEnumerator DestroyShatteredChest(GameObject ClosestShatteredChest)
-    {
-        yield return new WaitForSeconds(1);
-        Destroy(ClosestShatteredChest);
     }
 }
