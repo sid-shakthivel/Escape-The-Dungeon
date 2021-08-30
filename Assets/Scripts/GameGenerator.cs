@@ -10,13 +10,14 @@ public class GameGenerator : MonoBehaviour
     public Tilemap WallTileMap;
     public TileBase FloorTile;
     public TileBase WallTile;
-    public TileBase RandomTile;
     public GameObject Crate;
+    public GameObject Enemy;
+    public int ChestCount = 0;
+    public int EnemyCount = 0;
 
     private int Iterations = 30;
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
-    private int ChestCount = 0;
 
     private HashSet<Vector2> AllTiles = new HashSet<Vector2>();
 
@@ -27,6 +28,7 @@ public class GameGenerator : MonoBehaviour
         CreateWalls(AllTiles);
         CreateCrates();
         StartCoroutine(CreateCrates());
+        //StartCoroutine(CreateEnemies());
     }
 
     private IEnumerator CreateCrates()
@@ -37,8 +39,25 @@ public class GameGenerator : MonoBehaviour
             {
                 Vector2 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
                 Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
-                Instantiate(Crate, Position, Quaternion.identity);
+                GameObject InstaniatedChest = Instantiate(Crate, Position, Quaternion.identity);
+                InstaniatedChest.transform.SetParent(gameObject.transform);
                 ChestCount++;
+            }
+            yield return new WaitForSecondsRealtime(60);
+        }
+    }
+
+    private IEnumerator CreateEnemies()
+    {
+        while (true)
+        {
+            while (EnemyCount < 10)
+            {
+                Vector2 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
+                Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
+                GameObject InstaniatedEnemy = Instantiate(Enemy, Position, Quaternion.identity);
+                InstaniatedEnemy.transform.SetParent(gameObject.transform);
+                EnemyCount++;
             }
             yield return new WaitForSecondsRealtime(60);
         }
@@ -95,7 +114,7 @@ public class GameGenerator : MonoBehaviour
         for (int i = 0; i < Iterations; i++)
         {
             TilePositions.UnionWith(RandomWalk(CurrentPosition, 30));
-            CurrentPosition = TilePositions.ElementAt(Random.Range(0, TilePositions.Count));
+            //CurrentPosition = TilePositions.ElementAt(Random.Range(0, TilePositions.Count));
         }
         return TilePositions;
     }
