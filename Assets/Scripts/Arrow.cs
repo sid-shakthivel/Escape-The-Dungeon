@@ -14,7 +14,7 @@ public class Arrow : MonoBehaviour
     private void Update()
     {
         float Angle = Mathf.Atan2(ArrowRigidBody.velocity.x, ArrowRigidBody.velocity.y) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(Angle, Vector3.forward);
+        transform.rotation = Quaternion.AngleAxis(Angle * -1, Vector3.forward);
     }
 
     private void OnBecameInvisible()
