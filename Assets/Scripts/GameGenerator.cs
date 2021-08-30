@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -10,24 +9,23 @@ public class GameGenerator : MonoBehaviour
     public Tilemap WallTileMap;
     public TileBase FloorTile;
     public TileBase WallTile;
-    public TileBase RandomTile;
 
     private int Iterations = 30;
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
 
+    private HashSet<Vector2> AllTiles = new HashSet<Vector2>();
+
     private void Start()
     {
-        HashSet<Vector2> AllTiles = CreateDungeons();
-        AllTiles.UnionWith(CreatePaths());
+        CreateDungeons();
+        CreatePaths();
         CreateWalls(AllTiles);
     }
 
-    private HashSet<Vector2> CreateDungeons()
+    private void CreateDungeons()
     {
-        HashSet<Vector2> AllTiles = new HashSet<Vector2>();
-
-        AllTiles.UnionWith(CreateDungeon(GetNewCell(2, 2, 2, 2)));
+        CreateDungeon(GetNewCell(2, 2, 2, 2));
 
         int DungeonCount = 0;
         while (DungeonCount < 5)
@@ -43,20 +41,18 @@ public class GameGenerator : MonoBehaviour
             if (Grid[(int)NewDungeon.x, (int)NewDungeon.y] != 1)
             {
                 DungeonCount += 1;
-                AllTiles.UnionWith(CreateDungeon(NewDungeon));
+                CreateDungeon(NewDungeon);
             }
         }
-
-        return AllTiles;
     }
 
-    private HashSet<Vector2> CreateDungeon(Vector2 DungeonVector)
+    private void CreateDungeon(Vector2 DungeonVector)
     {
         Grid[(int)DungeonVector.x, (int)DungeonVector.y] = 1;
         HashSet<Vector2> TilePositions = RunRandomWalk(GetDungeonPosition(DungeonVector));
         foreach (Vector2 TilePosition in TilePositions)
             PaintSingleTile(FloorTileMap, FloorTile, TilePosition);
-        return TilePositions;
+        AllTiles.UnionWith(TilePositions);
     }
 
     public static Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
@@ -138,10 +134,8 @@ public class GameGenerator : MonoBehaviour
         return false;
     }
 
-    private HashSet<Vector2> CreatePaths()
+    private void CreatePaths()
     {
-        HashSet<Vector2> AllTiles = new HashSet<Vector2>();
-
         for (int i = 0; i < 5; i++)
         {
             for (int j = 0; j < 5; j++)
@@ -149,7 +143,7 @@ public class GameGenerator : MonoBehaviour
                     for (int k = j + 1; k < 5; k++)
                         if (Grid[i, k] == 1)
                         {
-                            AllTiles.UnionWith(CreatePath(new Vector2(i, j), new Vector2(i, k)));
+                            CreatePath(new Vector2(i, j), new Vector2(i, k));
                             j = k;
                         }
             for (int j = 0; j < 5; j++)
@@ -157,43 +151,28 @@ public class GameGenerator : MonoBehaviour
                     for (int k = j + 1; k < 5; k++)
                         if (Grid[k, i] == 1)
                         {
-                            AllTiles.UnionWith(CreatePath(new Vector2(j, i), new Vector2(k, i)));
+                            CreatePath(new Vector2(j, i), new Vector2(k, i));
                             j = k;
                         }
         }
-
-        return AllTiles;
     }
 
-    private HashSet<Vector2> CreatePath(Vector2 Position1, Vector2 Position2)
+    private void CreatePath(Vector2 Position1, Vector2 Position2)
     {
         Vector2 ScaledPosition1 = GetDungeonPosition(Position1);
         Vector2 ScaledPosition2 = GetDungeonPosition(Position2);
 
-        HashSet<Vector2> TilePositions = new HashSet<Vector2>();
+        Vector2 CurrentPosition1 = ScaledPosition1;
+        Vector2 CurrentPosition2 = ScaledPosition1 + (ScaledPosition1.x == ScaledPosition2.x ? new Vector2(0, 1) : new Vector2(1, 0));
 
-        if (ScaledPosition1.x == ScaledPosition2.x)
+        while (CurrentPosition1.Equals(ScaledPosition2) == false)
         {
-            Vector2 CurrentPosition = ScaledPosition1;
-
-            while (CurrentPosition.Equals(ScaledPosition2) == false)
-            {
-                TilePositions.Add(CurrentPosition);
-                PaintSingleTile(FloorTileMap, FloorTile, CurrentPosition);
-                CurrentPosition += new Vector2(0, 1);
-            }
-        } else
-        {
-            Vector2 CurrentPosition = ScaledPosition1;
-
-            while (CurrentPosition.Equals(ScaledPosition2) == false)
-            {
-                TilePositions.Add(CurrentPosition);
-                PaintSingleTile(FloorTileMap, FloorTile, CurrentPosition);
-                CurrentPosition += new Vector2(1, 0);
-            }
+            AllTiles.Add(CurrentPosition1);
+            //AllTiles.Add(CurrentPosition2);
+            PaintSingleTile(FloorTileMap, FloorTile, CurrentPosition1);
+            //PaintSingleTile(FloorTileMap, FloorTile, CurrentPosition2);
+            CurrentPosition1 += (ScaledPosition1.x == ScaledPosition2.x ? new Vector2(0, 1) : new Vector2(1, 0));
+            //CurrentPosition2 += (ScaledPosition1.x == ScaledPosition2.x ? new Vector2(0, 1) : new Vector2(1, 0));
         }
-
-        return TilePositions;
     }
 }

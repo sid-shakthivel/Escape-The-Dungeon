@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     {
         Vector3 MovementInput;
 
-        MovementInput = new Vector3(SimpleInput.GetAxis("Horizontal"), SimpleInput.GetAxis("Vertical"), 0);
+        //MovementInput = new Vector3(SimpleInput.GetAxis("Horizontal"), SimpleInput.GetAxis("Vertical"), 0);
         MovementInput = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
 
         PlayerAnimator.SetFloat("HorizontalSpeed", MovementInput.x * Speed);
