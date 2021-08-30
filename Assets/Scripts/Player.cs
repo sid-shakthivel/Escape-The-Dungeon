@@ -18,9 +18,8 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D PlayerRigidbody;
     private Animator PlayerAnimator;
-    private float ArrowCount = 10;
-    private float Hearts = 10;
-    private float ArrowPower = 10;
+    private static float arrowCount = 10;
+    private static float heartCount = 10;
     private ePlayerState PlayerState = ePlayerState.Idle;
     private Touch touch;
     private float TouchDuration;
@@ -92,7 +91,6 @@ public class Player : MonoBehaviour
         if (Hit == true && Hit.collider.CompareTag("Crate"))
         {
             Crate CrateScript = Hit.collider.GetComponent<Crate>();
-            //CrateScript.LootCrate();
             StartCoroutine(CrateScript.LootCrate());
         }
     }
@@ -119,33 +117,27 @@ public class Player : MonoBehaviour
         }
     }
 
-    public float GetArrowCount()
+    public static float ArrowCount
     {
-        return ArrowCount;
+        get
+        {
+            return arrowCount;
+        }
+        set
+        {
+            arrowCount = value;
+        }
     }
 
-    public float GetHearts()
+    public static float HeartCount
     {
-        return Hearts;
-    }
-
-    public float GetArrowPower()
-    {
-        return ArrowPower;
-    }
-
-    public void SetArrowCount(float NewArrowCount)
-    {
-        ArrowCount = NewArrowCount;
-    }
-
-    public void SetHearts(float NewHealth)
-    {
-        Hearts = NewHealth;
-    }
-
-    public void SetArrowPower(float NewArrowPower)
-    {
-        ArrowPower = NewArrowPower;
+        get
+        {
+            return heartCount;
+        }
+        set
+        {
+            heartCount = value;
+        }
     }
 }

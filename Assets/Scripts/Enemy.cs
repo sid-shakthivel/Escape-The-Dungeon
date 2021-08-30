@@ -8,7 +8,6 @@ public class Enemy : MonoBehaviour
     private GameObject Player;
     private Rigidbody2D EnemyRigidbody;
     private Animator EnemyAnimator;
-    private bool IsPlayerNear;
 
     private void Awake()
     {

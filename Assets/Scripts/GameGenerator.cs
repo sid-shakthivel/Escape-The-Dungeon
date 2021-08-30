@@ -12,13 +12,14 @@ public class GameGenerator : MonoBehaviour
     public TileBase WallTile;
     public GameObject Crate;
     public GameObject Enemy;
-    public int ChestCount = 0;
-    public int EnemyCount = 0;
+
+    private static int chestCount = 0;
+    private static int enemyCount = 0;
 
     private int Iterations = 30;
     private int[,] Grid = new int[5, 5];
     private Vector2 OldDungeon;
-
+    private List<Vector2> CardinalDirections = new List<Vector2>() { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
     private HashSet<Vector2> AllTiles = new HashSet<Vector2>();
 
     private void Start()
@@ -28,39 +29,7 @@ public class GameGenerator : MonoBehaviour
         CreateWalls(AllTiles);
         CreateCrates();
         StartCoroutine(CreateCrates());
-        //StartCoroutine(CreateEnemies());
-    }
-
-    private IEnumerator CreateCrates()
-    {
-        while (true)
-        {
-            while (ChestCount < 10)
-            {
-                Vector2 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
-                Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
-                GameObject InstaniatedChest = Instantiate(Crate, Position, Quaternion.identity);
-                InstaniatedChest.transform.SetParent(gameObject.transform);
-                ChestCount++;
-            }
-            yield return new WaitForSecondsRealtime(60);
-        }
-    }
-
-    private IEnumerator CreateEnemies()
-    {
-        while (true)
-        {
-            while (EnemyCount < 10)
-            {
-                Vector2 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
-                Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
-                GameObject InstaniatedEnemy = Instantiate(Enemy, Position, Quaternion.identity);
-                InstaniatedEnemy.transform.SetParent(gameObject.transform);
-                EnemyCount++;
-            }
-            yield return new WaitForSecondsRealtime(60);
-        }
+        //InvokeRepeating("CreateEnemies", 0f, 60f);
     }
 
     private void CreateDungeons()
@@ -93,85 +62,6 @@ public class GameGenerator : MonoBehaviour
         foreach (Vector2 TilePosition in TilePositions)
             PaintSingleTile(FloorTileMap, FloorTile, TilePosition);
         AllTiles.UnionWith(TilePositions);
-    }
-
-    public static Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
-    {
-        Vector2 GridCentreVector = new Vector2(2, 2);
-        Vector2 CentreVector = new Vector2(0, 0);
-        return ((GridDungeonVector - GridCentreVector) * 20) + CentreVector;
-    }
-
-    private void PaintSingleTile(Tilemap CurrentTileMap, TileBase Tile, Vector2 Position)
-    {
-        CurrentTileMap.SetTile(CurrentTileMap.WorldToCell(Position), Tile);
-    }
-
-    private HashSet<Vector2> RunRandomWalk(Vector2 StartPosition)
-    {
-        HashSet<Vector2> TilePositions = new HashSet<Vector2>();
-        Vector2 CurrentPosition = StartPosition;
-        for (int i = 0; i < Iterations; i++)
-        {
-            TilePositions.UnionWith(RandomWalk(CurrentPosition, 30));
-            //CurrentPosition = TilePositions.ElementAt(Random.Range(0, TilePositions.Count));
-        }
-        return TilePositions;
-    }
-
-    private HashSet<Vector2> RandomWalk(Vector2 StartPosition, int WalkLength)
-    {
-        HashSet<Vector2> Path = new HashSet<Vector2>();
-        Vector2 CurrentPosition = StartPosition;
-
-        for (int i = 0; i < WalkLength; i++)
-        {
-            Path.Add(CurrentPosition);
-            CurrentPosition = CurrentPosition + GetRandomDirection();
-        }
-
-        return Path;
-    }
-
-    private void CreateWalls(HashSet<Vector2> FloorPositions)
-    {
-        foreach (Vector2 FloorPosition in FloorPositions)
-        {
-            foreach (Vector2 Direction in CardinalDirections)
-            {
-                Vector2 NeighbourPosition = FloorPosition + Direction;
-                if (FloorPositions.Contains(NeighbourPosition) == false)
-                    PaintSingleTile(WallTileMap, WallTile, NeighbourPosition);
-            }
-        }
-    }
-
-    private List<Vector2> CardinalDirections = new List<Vector2>() { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
-
-    private Vector2 GetRandomDirection()
-    {
-        return CardinalDirections.ElementAt(Random.Range(0, CardinalDirections.Count));
-    }
-
-    private Vector2 GetNewCell(int MinX, int MaxX, int MinY, int MaxY)
-    {
-        return new Vector2(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
-    }
-
-    private bool CheckForHorizontalSpaceInGrid(int j)
-    {
-        for (int i = 0; i < 5; i++)
-            if (Grid[i, j] != 1)
-                return true;
-        return false;
-    }
-
-    private bool CheckForVerticalSpaceInGrid(int j)
-    {
-        for (int i = 0; i < 5; i++)
-            if (Grid[j, i] != 1)
-                return true;
-        return false;
     }
 
     private void CreatePaths()
@@ -213,6 +103,131 @@ public class GameGenerator : MonoBehaviour
             PaintSingleTile(FloorTileMap, FloorTile, CurrentPosition2);
             CurrentPosition1 += (ScaledPosition1.x == ScaledPosition2.x ? new Vector2(0, 1) : new Vector2(1, 0));
             CurrentPosition2 += (ScaledPosition1.x == ScaledPosition2.x ? new Vector2(0, 1) : new Vector2(1, 0));
+        }
+    }
+
+    private void CreateWalls(HashSet<Vector2> FloorPositions)
+    {
+        foreach (Vector2 FloorPosition in FloorPositions)
+        {
+            foreach (Vector2 Direction in CardinalDirections)
+            {
+                Vector2 NeighbourPosition = FloorPosition + Direction;
+                if (FloorPositions.Contains(NeighbourPosition) == false)
+                    PaintSingleTile(WallTileMap, WallTile, NeighbourPosition);
+            }
+        }
+    }
+
+    private IEnumerator CreateCrates()
+    {
+        while (true)
+        {
+            while (chestCount < 10)
+            {
+                Vector2 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
+                Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
+                GameObject InstaniatedChest = Instantiate(Crate, Position, Quaternion.identity);
+                InstaniatedChest.transform.SetParent(gameObject.transform);
+                chestCount++;
+            }
+            yield return new WaitForSecondsRealtime(60);
+        }
+    }
+
+    private void CreateEnemies()
+    {
+        while (enemyCount < 10)
+        {
+            Vector2 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
+            Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
+            GameObject InstaniatedEnemy = Instantiate(Enemy, Position, Quaternion.identity);
+            InstaniatedEnemy.transform.SetParent(gameObject.transform);
+            enemyCount++;
+        }
+    }
+
+    private HashSet<Vector2> RunRandomWalk(Vector2 StartPosition)
+    {
+        HashSet<Vector2> TilePositions = new HashSet<Vector2>();
+        for (int i = 0; i < Iterations; i++)
+            TilePositions.UnionWith(RandomWalk(StartPosition, 30));
+        return TilePositions;
+    }
+
+    private HashSet<Vector2> RandomWalk(Vector2 StartPosition, int WalkLength)
+    {
+        HashSet<Vector2> Path = new HashSet<Vector2>();
+        Vector2 CurrentPosition = StartPosition;
+
+        for (int i = 0; i < WalkLength; i++)
+        {
+            Path.Add(CurrentPosition);
+            CurrentPosition = CurrentPosition + GetRandomDirection();
+        }
+
+        return Path;
+    }
+
+    private Vector2 GetNewCell(int MinX, int MaxX, int MinY, int MaxY)
+    {
+        return new Vector2(Random.Range(MinX, MaxX), Random.Range(MinY, MaxY));
+    }
+
+    private bool CheckForHorizontalSpaceInGrid(int j)
+    {
+        for (int i = 0; i < 5; i++)
+            if (Grid[i, j] != 1)
+                return true;
+        return false;
+    }
+
+    private bool CheckForVerticalSpaceInGrid(int j)
+    {
+        for (int i = 0; i < 5; i++)
+            if (Grid[j, i] != 1)
+                return true;
+        return false;
+    }
+
+    public static Vector2 GetDungeonPosition(Vector2 GridDungeonVector)
+    {
+        Vector2 GridCentreVector = new Vector2(2, 2);
+        Vector2 CentreVector = new Vector2(0, 0);
+        return ((GridDungeonVector - GridCentreVector) * 20) + CentreVector;
+    }
+
+    private Vector2 GetRandomDirection()
+    {
+        return CardinalDirections.ElementAt(Random.Range(0, CardinalDirections.Count));
+    }
+
+    private void PaintSingleTile(Tilemap CurrentTileMap, TileBase Tile, Vector2 Position)
+    {
+        CurrentTileMap.SetTile(CurrentTileMap.WorldToCell(Position), Tile);
+    }
+
+    public static int ChestCount
+    {
+        get
+        {
+            return chestCount;
+        }
+        set
+        {
+            chestCount = value;
+        }
+    }
+
+    public static int EnemyCount
+    {
+        get
+        {
+            return enemyCount;
+        }
+        set
+        {
+            enemyCount = value;
         }
     }
 }
