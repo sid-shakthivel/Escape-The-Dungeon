@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 624753864465512221}
   - component: {fileID: 3223608732283250233}
   - component: {fileID: 4603496061248150365}
-  - component: {fileID: 6715296359737716000}
+  - component: {fileID: 6861496356795582918}
+  - component: {fileID: -2248612345831699832}
   m_Layer: 0
   m_Name: Arrow
   m_TagString: Arrow
@@ -70,9 +71,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1107194895
-  m_SortingLayer: 3
-  m_SortingOrder: 2
+  m_SortingLayerID: 1125408047
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 95406b6737b66479a80d172766f8bac5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -105,7 +106,33 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &6715296359737716000
+--- !u!61 &6861496356795582918
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1379188906614233163}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.05, y: 0.19}
+    newSize: {x: 0.05, y: 0.19}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.05, y: 0.19}
+  m_EdgeRadius: 0
+--- !u!114 &-2248612345831699832
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,6 +141,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1379188906614233163}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91089332934b340dd8423a73a43590de, type: 3}
+  m_Script: {fileID: 11500000, guid: 420e7b4d618cc44b787887103cdcdc5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

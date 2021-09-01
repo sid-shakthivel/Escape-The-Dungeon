@@ -93,10 +93,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1374541902173797365}
   - component: {fileID: 1374541902173797362}
-  - component: {fileID: 1374541902173797363}
   - component: {fileID: 1374541902173797367}
   - component: {fileID: 1374541902173797364}
   - component: {fileID: 5663406204947886332}
+  - component: {fileID: 1222856201}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -113,7 +113,7 @@ Transform:
   m_GameObject: {fileID: 1374541902173797360}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10, y: 10, z: 1}
+  m_LocalScale: {x: 5, y: 4.2, z: 1}
   m_Children:
   - {fileID: 1374541901716096106}
   m_Father: {fileID: 0}
@@ -156,9 +156,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 27424673
+  m_SortingLayerID: 1125408047
   m_SortingLayer: 2
-  m_SortingOrder: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 0f39a9205e4394ee1b6ba8269428d176, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -170,21 +170,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1374541902173797363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1374541902173797360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4644f946395df49eeb2fb26c7ae73d63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Arrow: {fileID: 4603496061248150365, guid: b4397613b0b2b42ebb6401fc6a0e88f1, type: 3}
-  Speed: 5
-  ArrowSpeed: 0
 --- !u!50 &1374541902173797367
 Rigidbody2D:
   serializedVersion: 4
@@ -251,3 +236,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1222856201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1374541902173797360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9bb0c182eae34d38bcd10277f24d262, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Projectile: {fileID: 4603496061248150365, guid: b4397613b0b2b42ebb6401fc6a0e88f1, type: 3}
+  ProjectileSpeed: 5

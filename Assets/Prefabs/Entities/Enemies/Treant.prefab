@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 8115702366569322928}
   - component: {fileID: 8115702366569322929}
   - component: {fileID: 8115702366569322930}
-  - component: {fileID: 8115702366569322931}
-  - component: {fileID: 2048113202409141898}
+  - component: {fileID: 3708559904329209264}
+  - component: {fileID: 5012269139110295039}
   m_Layer: 0
   m_Name: Treant
-  m_TagString: Enemy
+  m_TagString: Treant
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -72,9 +72,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1107194895
-  m_SortingLayer: 3
-  m_SortingOrder: 2
+  m_SortingLayerID: 1125408047
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 06a287cc97cb64df8a11af10f2352365, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -133,20 +133,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.24069592, y: 0.29355893}
   m_EdgeRadius: 0
---- !u!114 &8115702366569322931
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8115702366569322932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 87a4ef80c0bdf4f058ae8a40d5b558b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Speed: 2.5
---- !u!95 &2048113202409141898
+--- !u!95 &3708559904329209264
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -156,7 +143,7 @@ Animator:
   m_GameObject: {fileID: 8115702366569322932}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: cccd16eb1ddc44801930e2a24310ea41, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1767f3076620448ac8973dbd56dce2b7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -165,3 +152,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &5012269139110295039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8115702366569322932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1c6ac9657fe44da49d5f0558ad8eca4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Projectile: {fileID: 0}
+  ProjectileSpeed: 0

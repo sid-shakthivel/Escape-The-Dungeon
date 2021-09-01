@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3510228877773750509}
   - component: {fileID: 3510228877773750508}
-  - component: {fileID: 3510228877773750507}
   - component: {fileID: 3510228877773750506}
   - component: {fileID: 3510228877773750505}
+  - component: {fileID: 7539068288528182047}
   m_Layer: 0
   m_Name: Crate
   m_TagString: Crate
@@ -71,9 +71,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1107194895
-  m_SortingLayer: 3
-  m_SortingOrder: 2
+  m_SortingLayerID: 1125408047
+  m_SortingLayer: 2
+  m_SortingOrder: 1
   m_Sprite: {fileID: 5729802134587431284, guid: 2a96bc32d9e464553bec786d0cac4ae2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -85,22 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3510228877773750507
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3510228877773750504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 80cb0293ec6ae4d85a1328b340ec8aa6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShatteredCrate: {fileID: 3503917599050340177, guid: da9f18e72eee04cad9185aed21940322, type: 3}
-  Heart: {fileID: 699265157014821683, guid: 91088acc6a9284d8a8416ac2c5a12f4c, type: 3}
-  Coin: {fileID: 5454164113304087741, guid: 71e10990190f940f5a06148850cd9b22, type: 3}
-  ArrowPickup: {fileID: 3942262320911417683, guid: 00bee4f210021444f95eb5ed630576a2, type: 3}
 --- !u!61 &3510228877773750506
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -148,3 +132,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!114 &7539068288528182047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3510228877773750504}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d332075626f0c49c9b1e369270e6abc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShatteredCrate: {fileID: 3503917599050340177, guid: da9f18e72eee04cad9185aed21940322, type: 3}
+  Heart: {fileID: 699265157014821683, guid: 91088acc6a9284d8a8416ac2c5a12f4c, type: 3}
+  Coin: {fileID: 5454164113304087741, guid: 71e10990190f940f5a06148850cd9b22, type: 3}
+  ArrowPickup: {fileID: 3942262320911417683, guid: 00bee4f210021444f95eb5ed630576a2, type: 3}

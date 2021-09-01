@@ -6,7 +6,6 @@ TagManager:
   tags:
   - Path
   - Dungeon
-  - Enemy
   - GameGenerator
   - Crate
   - Heart
@@ -15,6 +14,9 @@ TagManager:
   - Joystick
   - Arrow
   - Boss
+  - Mole
+  - Treant
+  - EnemyAmmo
   layers:
   - Default
   - TransparentFX
@@ -52,12 +54,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Dungeons
-    uniqueID: 2298937223
-    locked: 0
-  - name: Player
-    uniqueID: 27424673
+  - name: Dungeon
+    uniqueID: 2219255163
     locked: 0
   - name: Other
-    uniqueID: 3187772401
+    uniqueID: 1125408047
     locked: 0
