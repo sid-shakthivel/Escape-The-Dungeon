@@ -1,17 +1,26 @@
+using System.Collections;
 using UnityEngine;
 
 public class Treant : Enemy
 {
     protected override void Start()
     {
-        PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
+        EntityProjectileCount = Mathf.Infinity;
         EntitySpeed = 2.5f;
         InflictedDamage = ProjectileRigidbody.GetComponent<Projectile>().ProjectileDamage;
+        StartCoroutine("FireProjectileEveryInterval", 5);
     }
 
-    protected override void FireProjectile()
+    private IEnumerator FireProjectileEveryInterval(float Interval)
     {
-        Rigidbody2D InstaniatedProjectile = Instantiate(ProjectileRigidbody, transform.position, Quaternion.identity);
-        InstaniatedProjectile.velocity = (PlayerGameObject.transform.position - InstaniatedProjectile.transform.position).normalized * EntitySpeed;
+        for (; ;)
+        {
+            if (DistanceToPlayer <= 5)
+            {
+                FireProjectile();
+                yield return new WaitForSeconds(5);
+            }
+            yield return new WaitForSeconds(0.01f);
+        }
     }
 }

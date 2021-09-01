@@ -5,16 +5,21 @@ public class Enemy : Entity
 {
     protected GameObject PlayerGameObject;
     protected float InflictedDamage;
+    protected float DistanceToPlayer;
 
     protected override void Move()
     {
+        PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
         MovementVector = (PlayerGameObject.transform.position - transform.position).normalized;
-        float DistanceToPlayer = Vector2.Distance(PlayerGameObject.transform.position, transform.position);
+        DistanceToPlayer = Vector2.Distance(PlayerGameObject.transform.position, transform.position);
 
-        if (DistanceToPlayer < 10 && DistanceToPlayer > 3)
-            FireProjectile();
-        else if (DistanceToPlayer < 10)
-            EntityRigidbody.velocity = new Vector2(MovementVector.x, MovementVector.y) * EntitySpeed;
+        if (DistanceToPlayer <= 5)
+        {
+            MovementVector = Vector2.zero;
+            EntityRigidbody.velocity = MovementVector;
+        }
+        else if (DistanceToPlayer <= 15)
+            EntityRigidbody.velocity = MovementVector * EntitySpeed;
     }
 
     protected override IEnumerator OnCollisionEnter2D(Collision2D Collision)

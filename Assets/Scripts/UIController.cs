@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
     public Text HeartText;
-    public Text BulletCountText;
+    public Text ArrowCountText;
 
     private Player PlayerScript;
 
@@ -17,6 +17,6 @@ public class UIController : MonoBehaviour
     private void Update()
     {
         HeartText.text = "Hearts: " + PlayerScript.EntityHeartCount;
-        BulletCountText.text = "Arrows: " + PlayerScript.EntityProjectileCount;
+        ArrowCountText.text = "Arrows: " + PlayerScript.EntityProjectileCount;
     }
 }

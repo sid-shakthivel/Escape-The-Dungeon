@@ -10,6 +10,7 @@ public class Player : Entity
     {
         EntitySpeed = 5;
         EntityHeartCount = 10;
+        EntityProjectileCount = 20;
     }
 
     protected override IEnumerator EntityLoop()
@@ -77,8 +78,9 @@ public class Player : Entity
             case "Mole":
                 EntityHeartCount -= 2;
                 break;
-            case "Treant":
-                EntityHeartCount -= 1;
+            case "EnemyAmmo":
+                Destroy(Collision.gameObject);
+                EntityHeartCount -= Collision.gameObject.GetComponent<Projectile>().ProjectileDamage;
                 break;
         }
 
@@ -86,7 +88,8 @@ public class Player : Entity
         {
             EntityAnimator.SetBool("IsDead", true);
             yield return new WaitForSeconds(10);
-            Destroy(gameObject);
+            if (gameObject.CompareTag("Player") == false)
+                Destroy(gameObject);
         }
     }
 }

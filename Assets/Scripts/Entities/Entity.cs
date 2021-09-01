@@ -39,7 +39,7 @@ public class Entity : MonoBehaviour
             Move();
             SetAnimation();
             SetState();
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.01f);
         }
     }
 
@@ -81,6 +81,7 @@ public class Entity : MonoBehaviour
                     InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.right;
                     break;
                 case EntityState.Left:
+                    InstanitatedProjectile.position -= new Vector2(0.1f, 0);
                     InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.left;
                     break;
                 default:
