@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Projectile : MonoBehaviour
@@ -12,13 +13,15 @@ public class Projectile : MonoBehaviour
         set { projectileDamage = value; }
     }
 
-    private void Awake()
+    private void Start()
     {
         ProjectileRigidBody = GetComponent<Rigidbody2D>();
+        StartCoroutine(Rotate());
     }
 
-    private void Update()
+    private IEnumerator Rotate()
     {
+        yield return new WaitForSeconds(0.5f);
         float Angle = Mathf.Atan2(ProjectileRigidBody.velocity.x, ProjectileRigidBody.velocity.y) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(Angle * -1, Vector3.forward);
     }

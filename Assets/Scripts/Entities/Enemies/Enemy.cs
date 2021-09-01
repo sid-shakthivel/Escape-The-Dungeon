@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
+using EntityNamespace;
 
-namespace Enemy
+namespace EnemyNamespace
 {
-    public class Enemy : Entity.Entity
+    public class Enemy : Entity
     {
         protected GameObject PlayerGameObject;
         protected float InflictedDamage;

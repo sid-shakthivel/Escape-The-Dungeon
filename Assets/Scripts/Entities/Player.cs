@@ -1,7 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using EntityNamespace;
 
-public class Player : Entity.Entity
+public class Player : Entity
 {
     private Touch touch;
     private float TouchDuration;

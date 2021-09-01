@@ -1,14 +1,15 @@
 using System.Collections;
 using UnityEngine;
+using EnemyNamespace;
 
-public class Treant : Enemy.Enemy
+public class Treant : Enemy
 {
     protected override void Start()
     {
         EntityProjectileCount = Mathf.Infinity;
         EntitySpeed = 2.5f;
         InflictedDamage = ProjectileRigidbody.GetComponent<Projectile>().ProjectileDamage;
-        StartCoroutine("FireProjectileEveryInterval", 5);
+        StartCoroutine("FireProjectileEveryInterval", 2.5);
     }
 
     private IEnumerator FireProjectileEveryInterval(float Interval)

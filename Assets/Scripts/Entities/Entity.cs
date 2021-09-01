@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Entity
+namespace EntityNamespace
 {
     public class Entity : MonoBehaviour
     {
@@ -77,16 +77,19 @@ namespace Entity
                 switch (EntityCurrentState)
                 {
                     case EntityState.Up:
+                        InstanitatedProjectile.position += new Vector2(0, 0.75f);
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.up;
                         break;
                     case EntityState.Right:
+                        InstanitatedProjectile.position += new Vector2(0.75f, 0);
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.right;
                         break;
                     case EntityState.Left:
-                        InstanitatedProjectile.position -= new Vector2(0.1f, 0);
+                        InstanitatedProjectile.position -= new Vector2(0.75f, 0);
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.left;
                         break;
                     default:
+                        InstanitatedProjectile.position -= new Vector2(0, 0.75f);
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.down;
                         break;
                 }
