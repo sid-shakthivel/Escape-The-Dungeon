@@ -30,4 +30,9 @@ public class Projectile : MonoBehaviour
     {
         Destroy(gameObject);
     }
+
+    private void OnCollisionEnter2D(Collision2D Collision)
+    {
+        Collision.rigidbody.AddForce((ProjectileRigidBody.velocity / 2));
+    }
 }
