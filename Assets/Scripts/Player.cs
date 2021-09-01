@@ -18,8 +18,8 @@ public class Player : MonoBehaviour
 
     private Rigidbody2D PlayerRigidbody;
     private Animator PlayerAnimator;
-    private static float arrowCount = 10;
-    private static float heartCount = 10;
+    private float arrowCount = 10;
+    private float heartCount = 10;
     private ePlayerState PlayerState = ePlayerState.Idle;
     private Touch touch;
     private float TouchDuration;
@@ -117,7 +117,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public static float ArrowCount
+    public float ArrowCount
     {
         get
         {
@@ -129,7 +129,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public static float HeartCount
+    public float HeartCount
     {
         get
         {
