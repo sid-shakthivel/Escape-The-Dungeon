@@ -1,17 +1,16 @@
 using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 using EntityNamespace;
 
 namespace EnemyNamespace
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
     public class Djkstra
     {
-        protected Dictionary<Tile, Tile> Result;
+        public Dictionary<Tile, Tile> Result;
 
-        public Djkstra(List<Tile> Graph, Tile StartNode)
+        public Djkstra(HashSet<Tile> Graph, Tile StartNode)
         {
             Dictionary<Tile, Tile> VisitedNodes = new Dictionary<Tile, Tile>();
             List<Tile> UnvisitedNodes = new List<Tile>();
@@ -25,19 +24,17 @@ namespace EnemyNamespace
 
             StartNode.CostFromStart = 0;
 
-            while (UnvisitedNodes.Count > 0)
+            while (UnvisitedNodes.Count != 0)
             {
                 UnvisitedNodes.Sort(new TileComparer());
                 Tile CurrentTile = UnvisitedNodes.First();
 
-                foreach (Vector2 Direction in Helper.CardinalDirections)
+                foreach (Vector3Int Direction in Helper.CardinalDirections)
                 {
-                    Tile NeighbourTile = (Tile)(from Node in UnvisitedNodes
-                                         where Node.Position == (CurrentTile.Position + Direction)
-                                         select Node);
-
-                    if (NeighbourTile != null)
+                    Tile NeighbourTile = null;
+                    try
                     {
+                        NeighbourTile = GameGenerator.Graph.First(Node => Node.Position == (CurrentTile.Position + Direction));
                         int Distance = CurrentTile.CostFromStart + 1;
                         if (Distance < NeighbourTile.CostFromStart)
                         {
@@ -45,6 +42,7 @@ namespace EnemyNamespace
                             VisitedNodes[NeighbourTile] = CurrentTile;
                         }
                     }
+                    catch { }
                 }
 
                 UnvisitedNodes.Remove(CurrentTile);

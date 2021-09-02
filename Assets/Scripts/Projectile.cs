@@ -33,6 +33,7 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D Collision)
     {
-        Collision.rigidbody.AddForce((ProjectileRigidBody.velocity / 2));
+        if (Collision.rigidbody) 
+            Collision.rigidbody.AddForce((ProjectileRigidBody.velocity / 2));
     }
 }

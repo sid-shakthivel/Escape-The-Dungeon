@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using EnemyNamespace;
@@ -14,27 +15,24 @@ public class Mole : Enemy
     protected override void Start()
     {
         base.Start();
+        EntitySpeed = 1;
         InflictedDamage = 2;
 
-        Vector3Int CurrentPosition = DungeonTiles.WorldToCell(transform.position);
-        Vector3Int PlayerPosition = DungeonTiles.WorldToCell(PlayerGameObject.transform.position);
-        Tile CurrentTile = (Tile)(from Node in GameGenerator.Graph
-                                where Node.Position == new Vector2(CurrentPosition.x, CurrentPosition.y)
-                                select Node);
-        Tile PlayerTile = (Tile)(from Node in GameGenerator.Graph
-                                where Node.Position == new Vector2(PlayerPosition.x, PlayerPosition.y)
-                                select Node);
+        Tile CurrentTile = GameGenerator.Graph.First(Node => Node.Position == new Vector3((int)transform.position.x, (int)transform.position.y, 0));
+        Tile PlayerTile = GameGenerator.Graph.First(Node => Node.Position == new Vector3Int((int)PlayerGameObject.transform.position.x, (int)PlayerGameObject.transform.position.y, (int)PlayerGameObject.transform.position.z));
+
         Djkstra djkstra = new Djkstra(GameGenerator.Graph, CurrentTile);
-        Path = djkstra.GetShortestPath(CurrentTile, PlayerTile);
+        Path = djkstra.GetShortestPath(PlayerTile, CurrentTile);
     }
 
     protected override void Move()
     {
-        if (PathIndex < Path.Count)
+        if (Path != null && PathIndex < Path.Count)
         {
-            MovementVector = Path[PathIndex].Position - (Vector2)transform.position;
-            EntityRigidbody.MovePosition(MovementVector * EntitySpeed * Time.deltaTime);
-            if ((Vector2)transform.position == GameGenerator.GetDungeonPosition(Path[PathIndex].Position))
+
+            MovementVector = (Path[PathIndex].Position - transform.position).normalized;
+            transform.position = Vector3.MoveTowards(transform.position, Path[PathIndex].Position, EntitySpeed * Time.deltaTime);
+            if (transform.position == Path[PathIndex].Position)
                 PathIndex++;
         }
     }

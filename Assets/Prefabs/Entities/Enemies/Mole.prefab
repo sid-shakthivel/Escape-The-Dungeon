@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 4585620030478265433}
   - component: {fileID: 4585620030478265434}
   - component: {fileID: 4585620030478265435}
-  - component: {fileID: 5406875104587371983}
+  - component: {fileID: 8154335047886980220}
+  - component: {fileID: 2352664267856321516}
   m_Layer: 0
   m_Name: Mole
   m_TagString: Mole
@@ -132,7 +133,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.13048247, y: 0.21244524}
   m_EdgeRadius: 0
---- !u!95 &5406875104587371983
+--- !u!114 &8154335047886980220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4585620030478265437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f0f8ec0024574450927b5aaeaaec2b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ProjectileRigidbody: {fileID: 0}
+  ProjectileSpeed: 0
+  DungeonTiles: {fileID: 5776564105075343918, guid: 5b81b0718a8254f2ca799af5f6a1000a, type: 3}
+--- !u!95 &2352664267856321516
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -142,7 +158,7 @@ Animator:
   m_GameObject: {fileID: 4585620030478265437}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f4eb2bfbc351648e38139d6556c40eba, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

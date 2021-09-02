@@ -8,7 +8,6 @@ public class Treant : Enemy
     {
         base.Start();
         EntityProjectileCount = Mathf.Infinity;
-        EntitySpeed = 2.5f;
         InflictedDamage = ProjectileRigidbody.GetComponent<Projectile>().ProjectileDamage;
         StartCoroutine("FireProjectileEveryInterval", 2.5);
     }
