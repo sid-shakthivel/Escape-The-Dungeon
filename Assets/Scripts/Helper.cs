@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Helper
 {
+    public static List<Vector2> CardinalDirections = new List<Vector2>() { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
+
     public static GameObject FindClosestGameObject(string TargetObject, Vector2 Position)
     {
         GameObject ClosestObject = null;

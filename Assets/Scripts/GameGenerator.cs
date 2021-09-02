@@ -4,6 +4,26 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+public class Tile
+{
+    public int CostFromStart { get; set; }
+    public Vector2 Position { get; set; }
+
+    public Tile(Vector2 TilePosition)
+    {
+        Position = TilePosition;
+        CostFromStart = int.MaxValue;
+    }
+}
+
+public class TileComparer : IComparer<Tile>
+{
+    public int Compare(Tile x, Tile y)
+    {
+        return x.CostFromStart - y.CostFromStart;
+    }
+}
+
 public class GameGenerator : MonoBehaviour
 {
     public Tilemap FloorTileMap;
@@ -22,6 +42,8 @@ public class GameGenerator : MonoBehaviour
     private List<Vector2> CardinalDirections = new List<Vector2>() { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
     private HashSet<Vector2> AllTiles = new HashSet<Vector2>();
 
+    public List<Tile> Graph = new List<Tile>();
+
     private void Start()
     {
         CreateDungeons();
@@ -30,6 +52,9 @@ public class GameGenerator : MonoBehaviour
         CreateCrates();
         StartCoroutine(CreateCrates());
         //InvokeRepeating("CreateEnemies", 0f, 60f);
+
+        foreach (Vector2 TilePosition in AllTiles)
+            Graph.Add(new Tile(TilePosition));
     }
 
     private void CreateDungeons()
