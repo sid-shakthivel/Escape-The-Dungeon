@@ -21,7 +21,7 @@ public class Projectile : MonoBehaviour
 
     private IEnumerator Rotate()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.01f);
         float Angle = Mathf.Atan2(ProjectileRigidBody.velocity.x, ProjectileRigidBody.velocity.y) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(Angle * -1, Vector3.forward);
     }
@@ -29,11 +29,5 @@ public class Projectile : MonoBehaviour
     private void OnBecameInvisible()
     {
         Destroy(gameObject);
-    }
-
-    private void OnCollisionEnter2D(Collision2D Collision)
-    {
-        if (Collision.rigidbody) 
-            Collision.rigidbody.AddForce((ProjectileRigidBody.velocity / 2));
     }
 }

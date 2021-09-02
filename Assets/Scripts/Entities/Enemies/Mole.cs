@@ -29,7 +29,6 @@ public class Mole : Enemy
     {
         if (Path != null && PathIndex < Path.Count)
         {
-
             MovementVector = (Path[PathIndex].Position - transform.position).normalized;
             transform.position = Vector3.MoveTowards(transform.position, Path[PathIndex].Position, EntitySpeed * Time.deltaTime);
             if (transform.position == Path[PathIndex].Position)

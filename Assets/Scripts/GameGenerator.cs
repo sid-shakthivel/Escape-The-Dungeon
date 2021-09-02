@@ -51,7 +51,7 @@ public class GameGenerator : MonoBehaviour
         CreateWalls(AllTiles);
         //StartCoroutine(CreateCrates());
         //InvokeRepeating("CreateEnemies", 0f, 60f);
-        CreateMole();
+        //CreateMole();
 
         foreach (Vector3 TilePosition in AllTiles)
         {

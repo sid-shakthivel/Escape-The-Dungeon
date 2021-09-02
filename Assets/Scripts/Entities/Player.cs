@@ -45,7 +45,7 @@ public class Player : Entity
 
     protected override void Move()
     {
-        MovementVector = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0);
+        MovementVector = new Vector3(SimpleInput.GetAxis("Horizontal"), SimpleInput.GetAxis("Vertical"), 0);
         EntityRigidbody.MovePosition(transform.position + MovementVector * Time.deltaTime * EntitySpeed);
     }
 
