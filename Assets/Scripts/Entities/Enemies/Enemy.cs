@@ -1,11 +1,12 @@
 using System.Collections;
 using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
 using EntityNamespace;
 
 namespace EnemyNamespace
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class Djkstra
     {
         protected Dictionary<Tile, Tile> Result;
@@ -73,9 +74,15 @@ namespace EnemyNamespace
         protected float InflictedDamage;
         protected float DistanceToPlayer;
 
-        protected override void Move()
+        protected override void Start()
         {
             PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
+            EntitySpeed = 2.5f;
+        }
+
+        protected override void Move()
+        {
+            //PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
             MovementVector = (PlayerGameObject.transform.position - transform.position).normalized;
             DistanceToPlayer = Vector2.Distance(PlayerGameObject.transform.position, transform.position);
 

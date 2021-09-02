@@ -42,7 +42,7 @@ public class GameGenerator : MonoBehaviour
     private List<Vector2> CardinalDirections = new List<Vector2>() { new Vector2(1, 0), new Vector2(-1, 0), new Vector2(0, 1), new Vector2(0, -1) };
     private HashSet<Vector2> AllTiles = new HashSet<Vector2>();
 
-    public List<Tile> Graph = new List<Tile>();
+    public static List<Tile> Graph = new List<Tile>();
 
     private void Start()
     {

@@ -6,6 +6,7 @@ public class Treant : Enemy
 {
     protected override void Start()
     {
+        base.Start();
         EntityProjectileCount = Mathf.Infinity;
         EntitySpeed = 2.5f;
         InflictedDamage = ProjectileRigidbody.GetComponent<Projectile>().ProjectileDamage;
