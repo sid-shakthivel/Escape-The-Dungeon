@@ -17,12 +17,7 @@ public class Mole : Enemy
         base.Start();
         EntitySpeed = 1;
         InflictedDamage = 2;
-
-        Tile CurrentTile = GameGenerator.Graph.First(Node => Node.Position == new Vector3((int)transform.position.x, (int)transform.position.y, 0));
-        Tile PlayerTile = GameGenerator.Graph.First(Node => Node.Position == new Vector3Int((int)PlayerGameObject.transform.position.x, (int)PlayerGameObject.transform.position.y, (int)PlayerGameObject.transform.position.z));
-
-        Djkstra djkstra = new Djkstra(GameGenerator.Graph, CurrentTile);
-        Path = djkstra.GetShortestPath(PlayerTile, CurrentTile);
+        StartCoroutine(GetPath());
     }
 
     protected override void Move()
@@ -34,5 +29,26 @@ public class Mole : Enemy
             if (transform.position == Path[PathIndex].Position)
                 PathIndex++;
         }
+    }
+
+    private IEnumerator GetPath()
+    {
+        //for (; ;)
+        //{
+        //    Djkstra djkstra = new Djkstra(GameGenerator.Graph, CurrentTile);
+        //    Path = djkstra.GetShortestPath(PlayerTile, CurrentTile);
+        //    PathIndex = 0;
+
+        //    foreach (Tile tile in Path)
+        //        Debug.Log(tile.Position);
+
+        //    yield return new WaitForSeconds(60);
+        //    yield return null;
+        //}
+
+        Tile CurrentTile = GameGenerator.Graph.First(Node => Node.Position == DungeonTiles.WorldToCell(transform.position));
+        Tile PlayerTile = GameGenerator.Graph.First(Node => Node.Position == DungeonTiles.WorldToCell(PlayerGameObject.transform.position));
+
+        yield return null;
     }
 }

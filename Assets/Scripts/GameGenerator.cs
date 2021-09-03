@@ -49,9 +49,9 @@ public class GameGenerator : MonoBehaviour
         CreateDungeons();
         CreatePaths();
         CreateWalls(AllTiles);
-        StartCoroutine(CreateCrates());
+        //StartCoroutine(CreateCrates());
         //InvokeRepeating("CreateEnemies", 0f, 60f);
-        //CreateMole();
+        CreateMole();
 
         foreach (Vector3 TilePosition in AllTiles)
         {
@@ -64,8 +64,9 @@ public class GameGenerator : MonoBehaviour
     {
         Vector3 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
         Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
-        GameObject InstaniatedTreant = Instantiate(Mole, Position, Quaternion.identity);
-        InstaniatedTreant.transform.SetParent(gameObject.transform);
+        GameObject InstaniatedMole = Instantiate(Mole, Position, Quaternion.identity);
+        //Debug.Log(FloorTileMap.WorldToCell(InstaniatedMole.transform.position));
+        InstaniatedMole.transform.SetParent(gameObject.transform);
     }
 
     private void CreateDungeons()
