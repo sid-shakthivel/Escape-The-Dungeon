@@ -72,24 +72,24 @@ namespace EntityNamespace
             if (EntityProjectileCount > 0)
             {
                 EntityAnimator.SetBool("IsAttack", true);
-                Rigidbody2D InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position, Quaternion.identity);
 
+                Rigidbody2D InstanitatedProjectile;
                 switch (EntityCurrentState)
                 {
                     case EntityState.Up:
-                        InstanitatedProjectile.position += new Vector2(0, 0.75f);
+                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.up;
                         break;
                     case EntityState.Right:
-                        InstanitatedProjectile.position += new Vector2(0.75f, 0);
+                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position + new Vector3(0.75f, 0, 0), Quaternion.identity);
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.right;
                         break;
                     case EntityState.Left:
-                        InstanitatedProjectile.position -= new Vector2(0.75f, 0);
+                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position - new Vector3(0.75f, 0, 0), Quaternion.identity);
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.left;
                         break;
                     default:
-                        InstanitatedProjectile.position -= new Vector2(0, 0.75f);
+                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position - new Vector3(0, 0.75f, 0), Quaternion.identity);
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.down;
                         break;
                 }

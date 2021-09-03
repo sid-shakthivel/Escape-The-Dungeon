@@ -17,6 +17,7 @@ TagManager:
   - Mole
   - Treant
   - EnemyAmmo
+  - Canvas
   layers:
   - Default
   - TransparentFX

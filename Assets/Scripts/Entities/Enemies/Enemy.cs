@@ -98,7 +98,6 @@ namespace EnemyNamespace
             if (Collision.gameObject.CompareTag("Arrow"))
             {
                 EntityHeartCount -= InflictedDamage;
-                Destroy(Collision.gameObject);
                 if (EntityHeartCount <= 0)
                 {
                     EntityAnimator.SetBool("IsDead", true);
