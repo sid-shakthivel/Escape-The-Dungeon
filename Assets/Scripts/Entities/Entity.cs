@@ -69,7 +69,7 @@ namespace EntityNamespace
 
         protected virtual void FireProjectile()
         {
-            if (EntityProjectileCount >= 0)
+            if (EntityProjectileCount > 0)
             {
                 EntityAnimator.SetBool("IsAttack", true);
                 Rigidbody2D InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position, Quaternion.identity);

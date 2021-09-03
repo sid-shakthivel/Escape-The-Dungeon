@@ -14,9 +14,9 @@ public class Crate : MonoBehaviour
     public IEnumerator LootCrate()
     {
         Vector3 ChestPosition = transform.position;
-        ClosestShatteredCrate = Instantiate(ShatteredCrate, transform.position, Quaternion.identity);
         Destroy(gameObject);
-        
+        ClosestShatteredCrate = Instantiate(ShatteredCrate, ChestPosition, Quaternion.identity);
+
         yield return new WaitForSeconds(1);
         Destroy(ClosestShatteredCrate);
 

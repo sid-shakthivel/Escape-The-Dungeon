@@ -4,14 +4,18 @@ using EntityNamespace;
 
 public class Player : Entity
 {
+    public int PlayerCoinCount = 0;
+
     private Touch touch;
     private float TouchDuration;
+    private UIController Canvas;
 
     protected override void Start()
     {
         EntitySpeed = 5;
         EntityHeartCount = 10;
         EntityProjectileCount = 20;
+        Canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<UIController>();
     }
 
     protected override IEnumerator EntityLoop()
@@ -77,11 +81,27 @@ public class Player : Entity
         switch (Collision.gameObject.tag)
         {
             case "Mole":
-                EntityHeartCount -= 2;
+                EntityHeartCount -= 1;
+                Canvas.RemoveHeart();
                 break;
             case "EnemyAmmo":
                 Destroy(Collision.gameObject);
                 EntityHeartCount -= Collision.gameObject.GetComponent<Projectile>().ProjectileDamage;
+                Canvas.RemoveHeart();
+                break;
+            case "Coin":
+                Destroy(Collision.gameObject);
+                PlayerCoinCount += 1;
+                break;
+            case "Heart":
+                Destroy(Collision.gameObject);
+                if (EntityHeartCount < 10)
+                    EntityHeartCount += 1;
+                Canvas.AddHeart();
+                break;
+            case "ArrowPickup":
+                Destroy(Collision.gameObject);
+                EntityProjectileCount += 1;
                 break;
         }
 

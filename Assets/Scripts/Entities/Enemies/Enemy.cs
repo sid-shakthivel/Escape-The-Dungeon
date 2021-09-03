@@ -80,7 +80,7 @@ namespace EnemyNamespace
 
         protected override void Move()
         {
-            //PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
+            PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
             MovementVector = (PlayerGameObject.transform.position - transform.position).normalized;
             DistanceToPlayer = Vector2.Distance(PlayerGameObject.transform.position, transform.position);
 

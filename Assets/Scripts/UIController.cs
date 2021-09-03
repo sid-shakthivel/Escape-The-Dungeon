@@ -1,10 +1,15 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public Text HeartText;
-    public Text ArrowCountText;
+    public Text TimeText;
+    public Text CoinText;
+    public Text ArrowText;
+    public List<GameObject> Hearts;
 
     private Player PlayerScript;
 
@@ -14,9 +19,36 @@ public class UIController : MonoBehaviour
         PlayerScript = PlayerObject.GetComponent<Player>();
     }
 
-    private void Update()
+    private void Start()
     {
-        HeartText.text = "Hearts: " + PlayerScript.EntityHeartCount;
-        ArrowCountText.text = "Arrows: " + PlayerScript.EntityProjectileCount;
+        StartCoroutine(Loop());
+    }
+
+    private IEnumerator Loop ()
+    {
+        while (true)
+        {
+            TimeText.text = "" + Time.realtimeSinceStartup;
+            CoinText.text = "" + PlayerScript.PlayerCoinCount;
+            ArrowText.text = "" + PlayerScript.EntityProjectileCount;
+            yield return new WaitForSeconds(1f);
+        } 
+    }
+
+    public void AddHeart()
+    {
+        foreach (GameObject Heart in Hearts)
+        {
+            if (Heart.activeSelf == false)
+            {
+                Heart.SetActive(true);
+                break;
+            }
+        }
+    }
+
+    public void RemoveHeart()
+    {
+        Hearts.ElementAt((int)PlayerScript.EntityHeartCount).SetActive(false);
     }
 }

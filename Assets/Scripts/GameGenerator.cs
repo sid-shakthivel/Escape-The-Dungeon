@@ -49,7 +49,7 @@ public class GameGenerator : MonoBehaviour
         CreateDungeons();
         CreatePaths();
         CreateWalls(AllTiles);
-        //StartCoroutine(CreateCrates());
+        StartCoroutine(CreateCrates());
         //InvokeRepeating("CreateEnemies", 0f, 60f);
         //CreateMole();
 
