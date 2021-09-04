@@ -34,8 +34,8 @@ public class GameGenerator : MonoBehaviour
     public GameObject Treant;
     public GameObject Mole;
 
-    private static int chestCount = 0;
-    private static int treantCount = 0;
+    private static int ChestCount { get; set; }
+    private static int TreantCount { get; set; }
 
     private int Iterations = 30;
     private int[,] Grid = new int[5, 5];
@@ -49,19 +49,15 @@ public class GameGenerator : MonoBehaviour
         CreateDungeons();
         CreatePaths();
         CreateWalls(AllTiles);
-        //StartCoroutine(CreateCrates());
-        //InvokeRepeating("CreateEnemies", 0f, 60f);
+        StartCoroutine(CreateCrates());
+        //InvokeRepeating("CreateTreants", 0f, 60f);
         CreateMole();
-
-        foreach (Vector3 TilePosition in AllTiles)
-        {
-            Vector3 Position = FloorTileMap.CellToWorld(new Vector3Int((int)TilePosition.x, (int)TilePosition.y, 0));
-            Graph.Add(new Tile(Position));
-        }
     }
 
     private void CreateMole()
     {
+        foreach (Vector3 TilePosition in AllTiles)
+            Graph.Add(new Tile(FloorTileMap.CellToWorld(new Vector3Int((int)TilePosition.x, (int)TilePosition.y, 0))));
         Vector3 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
         Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
         GameObject InstaniatedMole = Instantiate(Mole, Position, Quaternion.identity);
@@ -170,19 +166,20 @@ public class GameGenerator : MonoBehaviour
     {
         while (true)
         {
-            while (chestCount < 10)
+            while (ChestCount < 10)
             {
                 Vector3 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
                 Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
                 GameObject InstaniatedChest = Instantiate(Crate, Position, Quaternion.identity);
                 InstaniatedChest.transform.SetParent(gameObject.transform);
-                chestCount++;
+                AllTiles.Remove(RandomTile);
+                ChestCount++;
             }
             yield return new WaitForSecondsRealtime(60);
         }
     }
 
-    private void CreateEnemies()
+    private void CreateTreants()
     {
         while (TreantCount < 10)
         {
@@ -252,29 +249,5 @@ public class GameGenerator : MonoBehaviour
     private void PaintSingleTile(Tilemap CurrentTileMap, TileBase Tile, Vector3 Position)
     {
         CurrentTileMap.SetTile(CurrentTileMap.WorldToCell(Position), Tile);
-    }
-
-    public static int ChestCount
-    {
-        get
-        {
-            return chestCount;
-        }
-        set
-        {
-            chestCount = value;
-        }
-    }
-
-    public static int TreantCount
-    {
-        get
-        {
-            return treantCount;
-        }
-        set
-        {
-            treantCount = value;
-        }
     }
 }

@@ -14,6 +14,7 @@ public class Mole : Enemy
     protected override void Start()
     {
         base.Start();
+        EntityHeartCount = 20;
         EntitySpeed = 5;
         InflictedDamage = 2;
         FloorTilemap = GameObject.FindGameObjectWithTag("Floor").GetComponent<Tilemap>();
@@ -22,14 +23,22 @@ public class Mole : Enemy
 
     protected override void Move()
     {
-        if (Path != null && PathIndex < Path.Count)
+        if (Path == null)
+            return;
+
+        if (PathIndex < Path.Count)
         {
             Vector3 Target = FloorTilemap.GetCellCenterWorld(FloorTilemap.WorldToCell(Path[PathIndex].Position));
             MovementVector = (Target - transform.position).normalized;
             transform.position = Vector3.MoveTowards(transform.position, Target, EntitySpeed * Time.deltaTime);
             if (transform.position == Target)
                 PathIndex++;
+        } else
+        {
+            base.Move();
+            EntityRigidbody.velocity = MovementVector * EntitySpeed;
         }
+            
     }
 
     private IEnumerator GetPath()

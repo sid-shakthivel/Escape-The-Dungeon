@@ -33,9 +33,11 @@ public class Projectile : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D Collision)
     {
-        if (Collision.gameObject.CompareTag("Player") == false)
-        {
+
+        if (gameObject.CompareTag("Arrow") == true && !Collision.gameObject.CompareTag("Player") == true)
             Destroy(gameObject);
-        }
+
+        if (gameObject.CompareTag("EnemyAmmo") == true && !Collision.gameObject.CompareTag("Treant") == true)
+            Destroy(gameObject);
     }
 }

@@ -83,14 +83,6 @@ namespace EnemyNamespace
             PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
             MovementVector = (PlayerGameObject.transform.position - transform.position).normalized;
             DistanceToPlayer = Vector2.Distance(PlayerGameObject.transform.position, transform.position);
-
-            if (DistanceToPlayer <= 5)
-            {
-                MovementVector = Vector2.zero;
-                EntityRigidbody.velocity = MovementVector;
-            }
-            else if (DistanceToPlayer <= 15)
-                EntityRigidbody.velocity = MovementVector * EntitySpeed;
         }
 
         protected override IEnumerator OnCollisionEnter2D(Collision2D Collision)

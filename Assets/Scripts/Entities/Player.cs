@@ -12,7 +12,7 @@ public class Player : Entity
 
     protected override void Start()
     {
-        EntitySpeed = 5;
+        EntitySpeed = 2.5f;
         EntityHeartCount = 10;
         EntityProjectileCount = 20;
         Canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<UIController>();
