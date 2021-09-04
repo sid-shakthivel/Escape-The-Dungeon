@@ -16,7 +16,7 @@ public class Treant : Enemy
     protected override void Move()
     {
         base.Move();
-        if (DistanceToPlayer <= 5)
+        if (DistanceToPlayer <= 2)
         {
             MovementVector = Vector2.zero;
             EntityRigidbody.velocity = MovementVector;
@@ -27,7 +27,7 @@ public class Treant : Enemy
 
     private IEnumerator FireProjectileEveryInterval(float Interval)
     {
-        for (; ;)
+        for (;;)
         {
             if (DistanceToPlayer <= 5)
             {

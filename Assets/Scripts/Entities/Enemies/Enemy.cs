@@ -68,6 +68,7 @@ namespace EnemyNamespace
 
     public class Enemy : Entity
     {
+        public List<GameObject> Drops;
         protected GameObject PlayerGameObject;
         protected float InflictedDamage;
         protected float DistanceToPlayer;
@@ -94,6 +95,7 @@ namespace EnemyNamespace
                 {
                     EntityAnimator.SetBool("IsDead", true);
                     yield return new WaitForSeconds(2);
+                    Instantiate(Drops[Random.Range(0, Drops.Count)], transform.position, Quaternion.identity);
                     Destroy(gameObject);
                 }
             }

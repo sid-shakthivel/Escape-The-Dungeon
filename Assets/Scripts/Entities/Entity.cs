@@ -24,6 +24,7 @@ namespace EntityNamespace
         protected virtual float EntitySpeed { get; set; }
         protected EntityState EntityCurrentState = EntityState.Idle;
         protected Vector3 MovementVector;
+        protected Rigidbody2D InstanitatedProjectile;
 
         protected void Awake()
         {
@@ -73,7 +74,6 @@ namespace EntityNamespace
             {
                 EntityAnimator.SetBool("IsAttack", true);
 
-                Rigidbody2D InstanitatedProjectile;
                 switch (EntityCurrentState)
                 {
                     case EntityState.Up:

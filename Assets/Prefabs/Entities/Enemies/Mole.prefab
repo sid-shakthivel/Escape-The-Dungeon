@@ -147,7 +147,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProjectileRigidbody: {fileID: 0}
   ProjectileSpeed: 0
-  DungeonTiles: {fileID: 5776564105075343918, guid: 5b81b0718a8254f2ca799af5f6a1000a, type: 3}
+  Drops:
+  - {fileID: 3942262320911417683, guid: 00bee4f210021444f95eb5ed630576a2, type: 3}
+  - {fileID: 699265157014821683, guid: 91088acc6a9284d8a8416ac2c5a12f4c, type: 3}
+  - {fileID: 5454164113304087741, guid: 71e10990190f940f5a06148850cd9b22, type: 3}
 --- !u!95 &2352664267856321516
 Animator:
   serializedVersion: 3

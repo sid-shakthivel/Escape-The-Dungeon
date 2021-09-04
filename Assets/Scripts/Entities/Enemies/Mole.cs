@@ -15,7 +15,7 @@ public class Mole : Enemy
     {
         base.Start();
         EntityHeartCount = 20;
-        EntitySpeed = 5;
+        EntitySpeed = 2.5f;
         InflictedDamage = 2;
         FloorTilemap = GameObject.FindGameObjectWithTag("Floor").GetComponent<Tilemap>();
         StartCoroutine(GetPath());
@@ -52,7 +52,7 @@ public class Mole : Enemy
             Path = djkstra.GetShortestPath(PlayerTile, CurrentTile);
             PathIndex = 0;
 
-            yield return new WaitForSeconds(60);
+            yield return new WaitForSeconds(5);
         }
     }
 }

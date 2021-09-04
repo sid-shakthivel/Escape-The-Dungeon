@@ -12,7 +12,7 @@ public class Player : Entity
 
     protected override void Start()
     {
-        EntitySpeed = 2.5f;
+        EntitySpeed = 5f;
         EntityHeartCount = 10;
         EntityProjectileCount = 20;
         Canvas = GameObject.FindGameObjectWithTag("Canvas").GetComponent<UIController>();
@@ -101,7 +101,11 @@ public class Player : Entity
                 break;
             case "ArrowPickup":
                 Destroy(Collision.gameObject);
-                EntityProjectileCount += 1;
+                EntityProjectileCount += 10;
+                break;
+            case "Key":
+                Destroy(Collision.gameObject);
+                Debug.Log("You've Won!");
                 break;
         }
 

@@ -166,3 +166,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ProjectileRigidbody: {fileID: -4122694021487833138, guid: ae6825546d36343d48f078007cb67fdb, type: 3}
   ProjectileSpeed: 5
+  Drops:
+  - {fileID: 5454164113304087741, guid: 71e10990190f940f5a06148850cd9b22, type: 3}
+  - {fileID: 699265157014821683, guid: 91088acc6a9284d8a8416ac2c5a12f4c, type: 3}
+  - {fileID: 3942262320911417683, guid: 00bee4f210021444f95eb5ed630576a2, type: 3}

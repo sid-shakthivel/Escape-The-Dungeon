@@ -33,6 +33,7 @@ public class GameGenerator : MonoBehaviour
     public GameObject Crate;
     public GameObject Treant;
     public GameObject Mole;
+    public GameObject Key;
 
     private static int ChestCount { get; set; }
     private static int TreantCount { get; set; }
@@ -46,22 +47,19 @@ public class GameGenerator : MonoBehaviour
         
     private void Start()
     {
+        TreantCount = 0;
+        ChestCount = 0;
+
         CreateDungeons();
         CreatePaths();
         CreateWalls(AllTiles);
-        StartCoroutine(CreateCrates());
-        //InvokeRepeating("CreateTreants", 0f, 60f);
-        CreateMole();
-    }
+        StartCoroutine(CreateCrates(AllTiles));
 
-    private void CreateMole()
-    {
         foreach (Vector3 TilePosition in AllTiles)
             Graph.Add(new Tile(FloorTileMap.CellToWorld(new Vector3Int((int)TilePosition.x, (int)TilePosition.y, 0))));
-        Vector3 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
-        Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
-        GameObject InstaniatedMole = Instantiate(Mole, Position, Quaternion.identity);
-        InstaniatedMole.transform.SetParent(gameObject.transform);
+
+        Create(Mole, AllTiles);
+        Create(Key, AllTiles);
     }
 
     private void CreateDungeons()
@@ -94,6 +92,9 @@ public class GameGenerator : MonoBehaviour
         foreach (Vector3 TilePosition in TilePositions)
             PaintSingleTile(FloorTileMap, FloorTile, TilePosition);
         AllTiles.UnionWith(TilePositions);
+
+        for (int i = 0; i < 2; i++)
+            Create(Treant, TilePositions);
     }
 
     private void CreatePaths()
@@ -162,33 +163,25 @@ public class GameGenerator : MonoBehaviour
         }
     }
 
-    private IEnumerator CreateCrates()
+    private IEnumerator CreateCrates(HashSet<Vector3> Tiles)
     {
         while (true)
         {
             while (ChestCount < 10)
             {
-                Vector3 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
-                Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
-                GameObject InstaniatedChest = Instantiate(Crate, Position, Quaternion.identity);
-                InstaniatedChest.transform.SetParent(gameObject.transform);
-                AllTiles.Remove(RandomTile);
+                Create(Crate, Tiles);
                 ChestCount++;
             }
             yield return new WaitForSecondsRealtime(60);
         }
     }
 
-    private void CreateTreants()
+    private void Create(GameObject Object, HashSet<Vector3>Tiles)
     {
-        while (TreantCount < 10)
-        {
-            Vector3 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
-            Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
-            GameObject InstaniatedTreant = Instantiate(Treant, Position, Quaternion.identity);
-            InstaniatedTreant.transform.SetParent(gameObject.transform);
-            TreantCount++;
-        }
+        Vector3 RandomTile = Tiles.ElementAt(Random.Range(0, Tiles.Count));
+        Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
+        GameObject InstaniatedObject = Instantiate(Object, Position, Quaternion.identity);
+        InstaniatedObject.transform.SetParent(gameObject.transform);
     }
 
     private HashSet<Vector3> RunRandomWalk(Vector3 StartPosition)
