@@ -18,6 +18,7 @@ TagManager:
   - Treant
   - EnemyAmmo
   - Canvas
+  - Floor
   layers:
   - Default
   - TransparentFX

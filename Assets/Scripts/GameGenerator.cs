@@ -65,7 +65,6 @@ public class GameGenerator : MonoBehaviour
         Vector3 RandomTile = AllTiles.ElementAt(Random.Range(0, AllTiles.Count));
         Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
         GameObject InstaniatedMole = Instantiate(Mole, Position, Quaternion.identity);
-        //Debug.Log(FloorTileMap.WorldToCell(InstaniatedMole.transform.position));
         InstaniatedMole.transform.SetParent(gameObject.transform);
     }
 
