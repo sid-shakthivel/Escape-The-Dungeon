@@ -43,16 +43,20 @@ public class Mole : Enemy
 
     private IEnumerator GetPath()
     {
-        for (; ; )
+        for (;;)
         {
             Tile CurrentTile = GameGenerator.Graph.First(Node => Node.Position == FloorTilemap.WorldToCell(transform.position));
             Tile PlayerTile = GameGenerator.Graph.First(Node => Node.Position == FloorTilemap.WorldToCell(PlayerGameObject.transform.position));
 
             Djkstra djkstra = new Djkstra(GameGenerator.Graph, CurrentTile);
+
+            foreach (var Node in djkstra.Result)
+                Debug.Log(Node.Value);
+
             Path = djkstra.GetShortestPath(PlayerTile, CurrentTile);
             PathIndex = 0;
 
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(10);
         }
     }
 }

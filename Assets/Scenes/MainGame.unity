@@ -716,7 +716,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &600141993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2039,7 +2039,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1642645010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2634,7 +2634,7 @@ MonoBehaviour:
   Crate: {fileID: 3510228877773750504, guid: 453a2862ae3064772abeb85605c35292, type: 3}
   Treant: {fileID: 8115702366569322932, guid: 7c236448859aa487aabc47f1bb1cbd8f, type: 3}
   Mole: {fileID: 4585620030478265437, guid: cfff5841067f14ae887d32da05d9533c, type: 3}
-  Key: {fileID: 0}
+  Key: {fileID: 4623706205340858881, guid: dc39ad4f558e047cda4ea544b133840a, type: 3}
 --- !u!4 &1989034201
 Transform:
   m_ObjectHideFlags: 0

@@ -36,7 +36,6 @@ public class GameGenerator : MonoBehaviour
     public GameObject Key;
 
     private static int ChestCount { get; set; }
-    private static int TreantCount { get; set; }
 
     private int Iterations = 30;
     private int[,] Grid = new int[5, 5];
@@ -47,7 +46,6 @@ public class GameGenerator : MonoBehaviour
         
     private void Start()
     {
-        TreantCount = 0;
         ChestCount = 0;
 
         CreateDungeons();
@@ -93,8 +91,8 @@ public class GameGenerator : MonoBehaviour
             PaintSingleTile(FloorTileMap, FloorTile, TilePosition);
         AllTiles.UnionWith(TilePositions);
 
-        for (int i = 0; i < 2; i++)
-            Create(Treant, TilePositions);
+        //for (int i = 0; i < 2; i++)
+        //    Create(Treant, TilePositions);
     }
 
     private void CreatePaths()
