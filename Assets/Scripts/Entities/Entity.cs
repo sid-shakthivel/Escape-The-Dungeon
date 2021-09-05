@@ -104,8 +104,8 @@ namespace EntityNamespace
             EntityHeartCount -= 1;
             if (EntityHeartCount <= 0)
             {
-                EntityAnimator.SetBool("IsDead", true);
-                yield return new WaitForSeconds(10);
+                EntityAnimator.SetTrigger("Death");
+                yield return new WaitForSeconds(1);
                 Destroy(gameObject);
             }
         }

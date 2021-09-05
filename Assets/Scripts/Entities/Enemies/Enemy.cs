@@ -83,12 +83,22 @@ namespace EnemyNamespace
             PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
             FloorTilemap = GameObject.FindGameObjectWithTag("Floor").GetComponent<Tilemap>();
             EntitySpeed = 2.5f;
+            StartCoroutine(GetPath());
         }
 
         protected override void Move()
         {
-            PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
-            DistanceToPlayer = Vector2.Distance(PlayerGameObject.transform.position, transform.position);
+            if (Path == null)
+                return;
+
+            if (PathIndex < Path.Count)
+            {
+                Vector3 Target = FloorTilemap.GetCellCenterWorld(FloorTilemap.WorldToCell(Path[PathIndex].Position));
+                MovementVector = (Target - transform.position).normalized;
+                transform.position = Vector3.MoveTowards(transform.position, Target, EntitySpeed * Time.deltaTime);
+                if (transform.position == Target)
+                    PathIndex++;
+            }
         }
 
         protected override IEnumerator OnCollisionEnter2D(Collision2D Collision)

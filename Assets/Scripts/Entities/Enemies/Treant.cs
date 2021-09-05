@@ -13,31 +13,20 @@ public class Treant : Enemy
         EntityProjectileCount = Mathf.Infinity;
         InflictedDamage = ProjectileRigidbody.GetComponent<Projectile>().ProjectileDamage;
 
-        StartCoroutine(GetPath());
         StartCoroutine("FireProjectileEveryInterval", 1);
     }
 
     protected override void Move()
     {
-        base.Move();
+        PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
+        DistanceToPlayer = Vector2.Distance(PlayerGameObject.transform.position, transform.position);
+        
         if (DistanceToPlayer > 15 || DistanceToPlayer <= 5)
         {
             MovementVector = Vector3.zero;
             TurnTowardPlayer();
         } else
-        {
-            if (Path == null)
-                return;
-
-            if (PathIndex < Path.Count)
-            {
-                Vector3 Target = FloorTilemap.GetCellCenterWorld(FloorTilemap.WorldToCell(Path[PathIndex].Position));
-                MovementVector = (Target - transform.position).normalized;
-                transform.position = Vector3.MoveTowards(transform.position, Target, EntitySpeed * Time.deltaTime);
-                if (transform.position == Target)
-                    PathIndex++;
-            }
-        }
+            base.Move();
     }
 
     private IEnumerator FireProjectileEveryInterval(float Interval)

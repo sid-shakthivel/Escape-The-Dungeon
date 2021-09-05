@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using EntityNamespace;
 
 public class Player : Entity
@@ -111,10 +112,9 @@ public class Player : Entity
 
         if (EntityHeartCount <= 0)
         {
-            EntityAnimator.SetBool("IsDead", true);
-            yield return new WaitForSeconds(10);
-            if (gameObject.CompareTag("Player") == false)
-                Destroy(gameObject);
+            EntityAnimator.SetTrigger("Death");
+            yield return new WaitForSeconds(1);
+            SceneManager.LoadScene("Restart");
         }
     }
 }
