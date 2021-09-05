@@ -14,8 +14,7 @@ public class Mole : Enemy
     protected override void Start()
     {
         base.Start();
-        EntityHeartCount = 20;
-        EntitySpeed = 2.5f;
+        EntityHeartCount = 10;
         InflictedDamage = 2;
         FloorTilemap = GameObject.FindGameObjectWithTag("Floor").GetComponent<Tilemap>();
         StartCoroutine(GetPath());

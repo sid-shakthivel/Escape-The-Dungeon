@@ -7,7 +7,7 @@ public class Treant : Enemy
     protected override void Start()
     {
         base.Start();
-        EntityHeartCount = 10;
+        EntityHeartCount = 5;
         EntityProjectileCount = Mathf.Infinity;
         InflictedDamage = ProjectileRigidbody.GetComponent<Projectile>().ProjectileDamage;
         StartCoroutine("FireProjectileEveryInterval", 1);
@@ -16,7 +16,7 @@ public class Treant : Enemy
     protected override void Move()
     {
         base.Move();
-        if (DistanceToPlayer <= 2)
+        if (DistanceToPlayer <= 5)
         {
             MovementVector = Vector2.zero;
             EntityRigidbody.velocity = MovementVector;

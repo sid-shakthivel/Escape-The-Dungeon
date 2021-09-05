@@ -34,6 +34,7 @@ public class GameGenerator : MonoBehaviour
     public GameObject Treant;
     public GameObject Mole;
     public GameObject Key;
+    public GameObject Lamp;
 
     private static int ChestCount { get; set; }
 
@@ -56,7 +57,7 @@ public class GameGenerator : MonoBehaviour
         foreach (Vector3 TilePosition in AllTiles)
             Graph.Add(new Tile(FloorTileMap.CellToWorld(new Vector3Int((int)TilePosition.x, (int)TilePosition.y, 0))));
 
-        Create(Mole, AllTiles);
+        //Create(Mole, AllTiles);
         Create(Key, AllTiles);
     }
 
@@ -91,8 +92,8 @@ public class GameGenerator : MonoBehaviour
             PaintSingleTile(FloorTileMap, FloorTile, TilePosition);
         AllTiles.UnionWith(TilePositions);
 
-        //for (int i = 0; i < 2; i++)
-        //    Create(Treant, TilePositions);
+        //Create(Treant, TilePositions);
+        Create(Lamp, GetDungeonPosition(DungeonVector));
     }
 
     private void CreatePaths()
@@ -178,6 +179,13 @@ public class GameGenerator : MonoBehaviour
     {
         Vector3 RandomTile = Tiles.ElementAt(Random.Range(0, Tiles.Count));
         Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)RandomTile.x, (int)RandomTile.y, 0));
+        GameObject InstaniatedObject = Instantiate(Object, Position, Quaternion.identity);
+        InstaniatedObject.transform.SetParent(gameObject.transform);
+    }
+
+    private void Create(GameObject Object, Vector3 Tile)
+    {
+        Vector3 Position = FloorTileMap.GetCellCenterWorld(new Vector3Int((int)Tile.x, (int)Tile.y, 0));
         GameObject InstaniatedObject = Instantiate(Object, Position, Quaternion.identity);
         InstaniatedObject.transform.SetParent(gameObject.transform);
     }
