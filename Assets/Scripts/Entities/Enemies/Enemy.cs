@@ -17,6 +17,7 @@ namespace EnemyNamespace
 
             foreach (Tile Node in Graph)
             {
+                Node.CostFromStart = int.MaxValue;
                 if (Node != StartNode)
                     VisitedNodes.Add(Node, null);
                 UnvisitedNodes.Add(Node);
