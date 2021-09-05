@@ -805,7 +805,7 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Trapped in  a dim lit dungeon you must find the key to escape, while killing
-    Treants and Moles...
+    treants and moles...
 --- !u!222 &788862670
 CanvasRenderer:
   m_ObjectHideFlags: 0

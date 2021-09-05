@@ -57,7 +57,7 @@ public class GameGenerator : MonoBehaviour
         foreach (Vector3 TilePosition in AllTiles)
             Graph.Add(new Tile(FloorTileMap.CellToWorld(new Vector3Int((int)TilePosition.x, (int)TilePosition.y, 0))));
 
-        Create(Mole, AllTiles);
+        //Create(Mole, AllTiles);
         Create(Key, AllTiles);
     }
 
@@ -92,7 +92,7 @@ public class GameGenerator : MonoBehaviour
             PaintSingleTile(FloorTileMap, FloorTile, TilePosition);
         AllTiles.UnionWith(TilePositions);
 
-        Create(Treant, TilePositions);
+        //Create(Treant, TilePositions);
         Create(Lamp, GetDungeonPosition(DungeonVector));
     }
 
