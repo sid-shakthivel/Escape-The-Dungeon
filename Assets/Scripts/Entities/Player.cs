@@ -43,7 +43,7 @@ public class Player : Entity
             if (Input.GetButtonDown("Fire"))
                 FireProjectile();
 
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.000001f);
         }
     }
 

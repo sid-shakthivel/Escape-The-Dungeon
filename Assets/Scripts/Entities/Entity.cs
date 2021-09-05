@@ -42,7 +42,7 @@ namespace EntityNamespace
                 Move();
                 SetAnimation();
                 SetState();
-                yield return new WaitForSeconds(0.01f);
+                yield return new WaitForSeconds(0.000001f);
             }
         }
 
@@ -51,7 +51,11 @@ namespace EntityNamespace
             EntityAnimator.SetFloat("HorizontalSpeed", Mathf.Round(MovementVector.x));
             EntityAnimator.SetFloat("VerticalSpeed", Mathf.Round(MovementVector.y));
             EntityAnimator.SetBool("IsAttack", false);
-            EntityAnimator.SetBool("IsDead", false);
+            EntityAnimator.ResetTrigger("Death");
+            if (AnimatorHasParameter("Left")) EntityAnimator.ResetTrigger("Left");
+            if (AnimatorHasParameter("Right")) EntityAnimator.ResetTrigger("Right");
+            if (AnimatorHasParameter("Up")) EntityAnimator.ResetTrigger("Up");
+            if (AnimatorHasParameter("Down")) EntityAnimator.ResetTrigger("Down");
         }
 
         protected virtual void Move()
@@ -108,6 +112,16 @@ namespace EntityNamespace
                 yield return new WaitForSeconds(10);
                 Destroy(gameObject);
             }
+        }
+
+        private bool AnimatorHasParameter (string ParameterName)
+        {
+            foreach(AnimatorControllerParameter Parameter in EntityAnimator.parameters)
+            {
+                if (Parameter.name == ParameterName)
+                    return true;
+            }
+            return false;
         }
     }
 
