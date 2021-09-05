@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private Rigidbody2D ProjectileRigidBody;
+    protected Rigidbody2D ProjectileRigidBody;
     [SerializeField]
-    private float projectileDamage;
+    protected float projectileDamage;
 
     public float ProjectileDamage
     {
@@ -13,7 +13,7 @@ public class Projectile : MonoBehaviour
         set { projectileDamage = value; }
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         ProjectileRigidBody = GetComponent<Rigidbody2D>();
         StartCoroutine(Rotate());
@@ -25,6 +25,8 @@ public class Projectile : MonoBehaviour
         float Angle = Mathf.Atan2(ProjectileRigidBody.velocity.x, ProjectileRigidBody.velocity.y) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(Angle * -1, Vector3.forward);
     }
+
+    protected virtual void Update() { }
 
     private void OnBecameInvisible()
     {

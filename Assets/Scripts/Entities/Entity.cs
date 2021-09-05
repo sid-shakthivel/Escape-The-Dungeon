@@ -52,10 +52,6 @@ namespace EntityNamespace
             EntityAnimator.SetFloat("VerticalSpeed", Mathf.Round(MovementVector.y));
             EntityAnimator.SetBool("IsAttack", false);
             EntityAnimator.ResetTrigger("Death");
-            if (AnimatorHasParameter("Left")) EntityAnimator.ResetTrigger("Left");
-            if (AnimatorHasParameter("Right")) EntityAnimator.ResetTrigger("Right");
-            if (AnimatorHasParameter("Up")) EntityAnimator.ResetTrigger("Up");
-            if (AnimatorHasParameter("Down")) EntityAnimator.ResetTrigger("Down");
         }
 
         protected virtual void Move()

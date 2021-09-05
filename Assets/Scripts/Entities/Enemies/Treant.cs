@@ -17,7 +17,10 @@ public class Treant : Enemy
     {
         base.Move();
         if (DistanceToPlayer > 15 || DistanceToPlayer <= 5)
+        {
             MovementVector = Vector3.zero;
+            TurnTowardPlayer();
+        }
 
         EntityRigidbody.velocity = MovementVector * EntitySpeed;
     }
@@ -35,34 +38,34 @@ public class Treant : Enemy
         }
     }
 
-    protected override void FireProjectile()
+    private void TurnTowardPlayer()
     {
         Vector3 VectorToPlayer = PlayerGameObject.transform.position - transform.position;
-        Debug.Log(VectorToPlayer);
         if (Mathf.Abs(VectorToPlayer.x) > Mathf.Abs(VectorToPlayer.y))
         {
             if (VectorToPlayer.x < 0)
             {
                 EntityAnimator.SetTrigger("Left");
                 EntityCurrentState = EntityState.Left;
-            } else
+            }
+            else
             {
                 EntityAnimator.SetTrigger("Right");
                 EntityCurrentState = EntityState.Right;
             }
-        } else
+        }
+        else
         {
             if (VectorToPlayer.y < 0)
             {
                 EntityAnimator.SetTrigger("Down");
                 EntityCurrentState = EntityState.Down;
-            } else
+            }
+            else
             {
                 EntityAnimator.SetTrigger("Up");
                 EntityCurrentState = EntityState.Up;
             }
         }
-
-        base.FireProjectile();
     }
 }

@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2707518724336767473}
   - component: {fileID: 2707518724336767246}
   - component: {fileID: 6793661966982365634}
-  - component: {fileID: 3621155270992012239}
   - component: {fileID: -4122694021487833138}
+  - component: {fileID: 67074169987624560}
   m_Layer: 0
   m_Name: EnemyAmmo
   m_TagString: EnemyAmmo
@@ -101,19 +101,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &3621155270992012239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2707518724336767247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 420e7b4d618cc44b787887103cdcdc5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  projectileDamage: 1
 --- !u!50 &-4122694021487833138
 Rigidbody2D:
   serializedVersion: 4
@@ -135,3 +122,17 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &67074169987624560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2707518724336767247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6305622d9bf104282b50f33ce39c7ced, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectileDamage: 1
+  EnemyDartSpeed: 5
