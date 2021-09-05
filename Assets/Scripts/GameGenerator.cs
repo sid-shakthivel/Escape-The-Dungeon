@@ -92,7 +92,7 @@ public class GameGenerator : MonoBehaviour
             PaintSingleTile(FloorTileMap, FloorTile, TilePosition);
         AllTiles.UnionWith(TilePositions);
 
-        //Create(Treant, TilePositions);
+        Create(Treant, TilePositions);
         Create(Lamp, GetDungeonPosition(DungeonVector));
     }
 

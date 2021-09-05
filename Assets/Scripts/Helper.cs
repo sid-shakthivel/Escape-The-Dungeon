@@ -36,4 +36,14 @@ public static class Helper
         }
         return ClosestObject;
     }
+
+    public static bool AnimatorHasParameter(string ParameterName, Animator EntityAnimator)
+    {
+        foreach (AnimatorControllerParameter Parameter in EntityAnimator.parameters)
+        {
+            if (Parameter.name == ParameterName)
+                return true;
+        }
+        return false;
+    }
 }

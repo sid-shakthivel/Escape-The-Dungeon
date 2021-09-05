@@ -109,16 +109,6 @@ namespace EntityNamespace
                 Destroy(gameObject);
             }
         }
-
-        private bool AnimatorHasParameter (string ParameterName)
-        {
-            foreach(AnimatorControllerParameter Parameter in EntityAnimator.parameters)
-            {
-                if (Parameter.name == ParameterName)
-                    return true;
-            }
-            return false;
-        }
     }
 
 }

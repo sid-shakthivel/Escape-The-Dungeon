@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using EntityNamespace;
+using UnityEngine.Tilemaps;
 
 namespace EnemyNamespace
 {
@@ -73,17 +74,20 @@ namespace EnemyNamespace
         protected GameObject PlayerGameObject;
         protected float InflictedDamage;
         protected float DistanceToPlayer;
+        protected Tilemap FloorTilemap;
+        protected List<Tile> Path;
+        protected int PathIndex = 0;
 
         protected override void Start()
         {
             PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
+            FloorTilemap = GameObject.FindGameObjectWithTag("Floor").GetComponent<Tilemap>();
             EntitySpeed = 2.5f;
         }
 
         protected override void Move()
         {
             PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
-            MovementVector = (PlayerGameObject.transform.position - transform.position).normalized;
             DistanceToPlayer = Vector2.Distance(PlayerGameObject.transform.position, transform.position);
         }
 
@@ -94,11 +98,27 @@ namespace EnemyNamespace
                 EntityHeartCount -= InflictedDamage;
                 if (EntityHeartCount <= 0)
                 {
-                    EntityAnimator.SetBool("IsDead", true);
+                    EntityAnimator.SetTrigger("Death");
                     yield return new WaitForSeconds(2);
                     Instantiate(Drops[Random.Range(0, Drops.Count)], transform.position, Quaternion.identity);
                     Destroy(gameObject);
                 }
+            }
+        }
+
+        protected IEnumerator GetPath()
+        {
+            for (; ; )
+            {
+                Tile CurrentTile = GameGenerator.Graph.First(Node => Node.Position == FloorTilemap.WorldToCell(transform.position));
+                Tile PlayerTile = GameGenerator.Graph.First(Node => Node.Position == FloorTilemap.WorldToCell(PlayerGameObject.transform.position));
+
+                Djkstra djkstra = new Djkstra(GameGenerator.Graph, CurrentTile);
+
+                Path = djkstra.GetShortestPath(PlayerTile, CurrentTile);
+                PathIndex = 0;
+
+                yield return new WaitForSeconds(10);
             }
         }
     }

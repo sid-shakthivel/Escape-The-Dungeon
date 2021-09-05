@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using EnemyNamespace;
 
@@ -10,6 +12,8 @@ public class Treant : Enemy
         EntityHeartCount = 5;
         EntityProjectileCount = Mathf.Infinity;
         InflictedDamage = ProjectileRigidbody.GetComponent<Projectile>().ProjectileDamage;
+
+        StartCoroutine(GetPath());
         StartCoroutine("FireProjectileEveryInterval", 1);
     }
 
@@ -20,9 +24,20 @@ public class Treant : Enemy
         {
             MovementVector = Vector3.zero;
             TurnTowardPlayer();
-        }
+        } else
+        {
+            if (Path == null)
+                return;
 
-        EntityRigidbody.velocity = MovementVector * EntitySpeed;
+            if (PathIndex < Path.Count)
+            {
+                Vector3 Target = FloorTilemap.GetCellCenterWorld(FloorTilemap.WorldToCell(Path[PathIndex].Position));
+                MovementVector = (Target - transform.position).normalized;
+                transform.position = Vector3.MoveTowards(transform.position, Target, EntitySpeed * Time.deltaTime);
+                if (transform.position == Target)
+                    PathIndex++;
+            }
+        }
     }
 
     private IEnumerator FireProjectileEveryInterval(float Interval)
