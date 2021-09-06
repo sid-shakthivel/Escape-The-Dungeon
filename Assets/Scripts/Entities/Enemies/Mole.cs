@@ -8,7 +8,7 @@ public class Mole : Enemy
     {
         base.Start();
         EntityHeartCount = 10;
-        EntitySpeed = 1;
+        EntitySpeed = 2;
         InflictedDamage = 2;
         StartCoroutine(GetPath());
     }

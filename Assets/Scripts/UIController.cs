@@ -19,20 +19,11 @@ public class UIController : MonoBehaviour
         PlayerScript = PlayerObject.GetComponent<Player>();
     }
 
-    private void Start()
+    private void Update()
     {
-        StartCoroutine(Loop());
-    }
-
-    private IEnumerator Loop ()
-    {
-        while (true)
-        {
-            TimeText.text = "" + Time.realtimeSinceStartup;
-            CoinText.text = "" + PlayerScript.PlayerCoinCount;
-            ArrowText.text = "" + PlayerScript.EntityProjectileCount;
-            yield return new WaitForSeconds(1f);
-        } 
+        TimeText.text = "" + Mathf.Floor(Time.realtimeSinceStartup);
+        CoinText.text = "" + PlayerScript.PlayerCoinCount;
+        ArrowText.text = "" + PlayerScript.EntityProjectileCount;
     }
 
     public void AddHeart()

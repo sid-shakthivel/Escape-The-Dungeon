@@ -113,7 +113,7 @@ namespace EnemyNamespace
                 Path = djkstra.GetShortestPath(PlayerTile, CurrentTile);
                 PathIndex = 0;
 
-                yield return new WaitForSeconds(5);
+                yield return new WaitForSeconds(2.5f);
             }
         }
     }
