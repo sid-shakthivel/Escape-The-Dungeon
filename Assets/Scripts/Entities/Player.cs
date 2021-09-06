@@ -1,14 +1,12 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 using EntityNamespace;
 
 public class Player : Entity
 {
     public int PlayerCoinCount = 0;
-
-    private Touch touch;
-    private float TouchDuration;
     private UIController Canvas;
 
     protected override void Start()
@@ -27,16 +25,15 @@ public class Player : Entity
             SetAnimation();
             SetState();
 
-            if (Input.touchCount > 0)
+            if (Input.touchCount == 1)
             {
-                TouchDuration += Time.deltaTime;
-                touch = Input.GetTouch(0);
-
-                if (touch.phase == TouchPhase.Ended && TouchDuration < 0.2f)
-                    StartCoroutine("SingleOrDoubleTap");
+                Touch tTouch = Input.GetTouch(0);
+                if (tTouch.phase == TouchPhase.Began)
+                {
+                    if (!CheckForChest(tTouch.position) && !EventSystem.current.IsPointerOverGameObject(tTouch.fingerId))
+                        FireProjectile();
+                }
             }
-            else
-                TouchDuration = 0f;
 
             if (Input.GetMouseButtonUp(0))
                 CheckForChest(Input.mousePosition);
@@ -54,19 +51,7 @@ public class Player : Entity
         EntityRigidbody.MovePosition(transform.position + MovementVector * Time.deltaTime * EntitySpeed);
     }
 
-    IEnumerator SingleOrDoubleTap()
-    {
-        yield return new WaitForSeconds(0.3f);
-        if (touch.tapCount == 1)
-            FireProjectile();
-        else
-        {
-            StopCoroutine("SingleOrDoubleTap");
-            CheckForChest(touch.position);
-        }
-    }
-
-    private void CheckForChest(Vector3 Position)
+    private bool CheckForChest(Vector3 Position)
     {
         RaycastHit2D Hit = Physics2D.GetRayIntersection(Camera.main.ScreenPointToRay(Position));
 
@@ -74,7 +59,9 @@ public class Player : Entity
         {
             Crate CrateScript = Hit.collider.GetComponent<Crate>();
             StartCoroutine(CrateScript.LootCrate());
+            return true;
         }
+        return false;
     }
 
     protected override IEnumerator OnCollisionEnter2D(Collision2D Collision)
@@ -106,7 +93,7 @@ public class Player : Entity
                 break;
             case "Key":
                 Destroy(Collision.gameObject);
-                Debug.Log("You've Won!");
+                SceneManager.LoadScene("Win");
                 break;
         }
 

@@ -16,17 +16,7 @@ public class Projectile : MonoBehaviour
     protected virtual void Start()
     {
         ProjectileRigidBody = GetComponent<Rigidbody2D>();
-        StartCoroutine(Rotate());
     }
-
-    private IEnumerator Rotate()
-    {
-        yield return new WaitForSeconds(0.000001f);
-        float Angle = Mathf.Atan2(ProjectileRigidBody.velocity.x, ProjectileRigidBody.velocity.y) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.AngleAxis(Angle * -1, Vector3.forward);
-    }
-
-    protected virtual void Update() { }
 
     private void OnBecameInvisible()
     {

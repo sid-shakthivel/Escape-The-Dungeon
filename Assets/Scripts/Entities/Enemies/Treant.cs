@@ -13,7 +13,8 @@ public class Treant : Enemy
         EntityProjectileCount = Mathf.Infinity;
         InflictedDamage = ProjectileRigidbody.GetComponent<Projectile>().ProjectileDamage;
 
-        StartCoroutine("FireProjectileEveryInterval", 1);
+        StartCoroutine("FireProjectileEveryInterval", 2.5);
+        StartCoroutine(GetPath());
     }
 
     protected override void Move()
@@ -21,7 +22,7 @@ public class Treant : Enemy
         PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
         DistanceToPlayer = Vector2.Distance(PlayerGameObject.transform.position, transform.position);
         
-        if (DistanceToPlayer > 15 || DistanceToPlayer <= 5)
+        if (DistanceToPlayer > 15 || DistanceToPlayer <= 3)
         {
             MovementVector = Vector3.zero;
             TurnTowardPlayer();
@@ -36,9 +37,28 @@ public class Treant : Enemy
             if (DistanceToPlayer <= 5)
             {
                 FireProjectile();
-                yield return new WaitForSeconds(5);
+                yield return new WaitForSeconds(Interval);
             }
             yield return new WaitForSeconds(0.01f);
+        }
+    }
+
+    protected override IEnumerator GetPath()
+    {
+        for (; ; )
+        {
+            if (DistanceToPlayer <= 15 && DistanceToPlayer > 3)
+            {
+                Tile CurrentTile = GameGenerator.Graph.First(Node => Node.Position == FloorTilemap.WorldToCell(transform.position));
+                Tile PlayerTile = GameGenerator.Graph.First(Node => Node.Position == FloorTilemap.WorldToCell(PlayerGameObject.transform.position));
+
+                Djkstra djkstra = new Djkstra(GameGenerator.Graph, CurrentTile);
+
+                Path = djkstra.GetShortestPath(PlayerTile, CurrentTile);
+                PathIndex = 0;
+            }
+
+            yield return new WaitForSeconds(5);
         }
     }
 
@@ -70,6 +90,24 @@ public class Treant : Enemy
                 EntityAnimator.SetTrigger("Up");
                 EntityCurrentState = EntityState.Up;
             }
+        }
+    }
+
+    protected override IEnumerator OnCollisionEnter2D(Collision2D Collision)
+    {
+        if (Collision.gameObject.CompareTag("Arrow"))
+        {
+            EntityHeartCount -= InflictedDamage;
+            if (EntityHeartCount <= 0)
+            {
+                EntityAnimator.SetTrigger("Death");
+                yield return new WaitForSeconds(0.5f);
+                Instantiate(Drops[Random.Range(0, Drops.Count)], transform.position, Quaternion.identity);
+                Destroy(gameObject);
+            }
+        } else if (Collision.gameObject.CompareTag("Crate"))
+        {
+            Destroy(Collision.gameObject);
         }
     }
 }

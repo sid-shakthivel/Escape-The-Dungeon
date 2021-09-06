@@ -10,10 +10,6 @@ public class EnemyDart : Projectile
     {
         base.Start();
         PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
-    }
-
-    protected override void Update()
-    {
         ProjectileRigidBody.velocity = (PlayerGameObject.transform.position - transform.position).normalized * EnemyDartSpeed;
     }
 }

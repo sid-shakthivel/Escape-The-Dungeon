@@ -11,7 +11,6 @@ TagManager:
   - Heart
   - ArrowPickup
   - Coin
-  - Joystick
   - Arrow
   - Boss
   - Mole
@@ -20,6 +19,7 @@ TagManager:
   - Canvas
   - Floor
   - Key
+  - D-Pad
   layers:
   - Default
   - TransparentFX

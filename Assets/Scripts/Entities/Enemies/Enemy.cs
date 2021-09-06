@@ -74,16 +74,16 @@ namespace EnemyNamespace
         protected GameObject PlayerGameObject;
         protected float InflictedDamage;
         protected float DistanceToPlayer;
+
         protected Tilemap FloorTilemap;
         protected List<Tile> Path;
-        protected int PathIndex = 0;
+        protected int PathIndex;
 
         protected override void Start()
         {
             PlayerGameObject = GameObject.FindGameObjectWithTag("Player");
             FloorTilemap = GameObject.FindGameObjectWithTag("Floor").GetComponent<Tilemap>();
             EntitySpeed = 2.5f;
-            StartCoroutine(GetPath());
         }
 
         protected override void Move()
@@ -101,22 +101,7 @@ namespace EnemyNamespace
             }
         }
 
-        protected override IEnumerator OnCollisionEnter2D(Collision2D Collision)
-        {
-            if (Collision.gameObject.CompareTag("Arrow"))
-            {
-                EntityHeartCount -= InflictedDamage;
-                if (EntityHeartCount <= 0)
-                {
-                    EntityAnimator.SetTrigger("Death");
-                    yield return new WaitForSeconds(2);
-                    Instantiate(Drops[Random.Range(0, Drops.Count)], transform.position, Quaternion.identity);
-                    Destroy(gameObject);
-                }
-            }
-        }
-
-        protected IEnumerator GetPath()
+        protected virtual IEnumerator GetPath()
         {
             for (; ; )
             {

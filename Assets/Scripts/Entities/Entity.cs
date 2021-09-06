@@ -51,7 +51,6 @@ namespace EntityNamespace
             EntityAnimator.SetFloat("HorizontalSpeed", Mathf.Round(MovementVector.x));
             EntityAnimator.SetFloat("VerticalSpeed", Mathf.Round(MovementVector.y));
             EntityAnimator.SetBool("IsAttack", false);
-            EntityAnimator.ResetTrigger("Death");
         }
 
         protected virtual void Move()
@@ -77,19 +76,19 @@ namespace EntityNamespace
                 switch (EntityCurrentState)
                 {
                     case EntityState.Up:
-                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position + new Vector3(0, 0.75f, 0), Quaternion.identity);
+                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position + new Vector3(0, 0.75f, 0), Quaternion.Euler(0, 0, 0));
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.up;
                         break;
                     case EntityState.Right:
-                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position + new Vector3(0.75f, 0, 0), Quaternion.identity);
+                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position + new Vector3(0.75f, 0, 0), Quaternion.Euler(0, 0, -90));
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.right;
                         break;
                     case EntityState.Left:
-                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position - new Vector3(0.75f, 0, 0), Quaternion.identity);
+                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position - new Vector3(0.75f, 0, 0), Quaternion.Euler(0, 0, 90));
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.left;
                         break;
                     default:
-                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position - new Vector3(0, 0.75f, 0), Quaternion.identity);
+                        InstanitatedProjectile = Instantiate(ProjectileRigidbody, transform.position - new Vector3(0, 0.75f, 0), Quaternion.Euler(0, 0, 180));
                         InstanitatedProjectile.velocity = ProjectileSpeed * Vector2.down;
                         break;
                 }
@@ -105,7 +104,7 @@ namespace EntityNamespace
             if (EntityHeartCount <= 0)
             {
                 EntityAnimator.SetTrigger("Death");
-                yield return new WaitForSeconds(1);
+                yield return new WaitForSeconds(2);
                 Destroy(gameObject);
             }
         }
